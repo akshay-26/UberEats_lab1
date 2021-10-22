@@ -22,7 +22,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Image } from 'react-bootstrap/esm';
-import {  createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { MenuItem } from '@mui/material';
 
 
@@ -41,12 +41,12 @@ const deliveryModes = [{
 
 export default function RestaurantProfile() {
 
-    
+
 
     const history = useHistory();
-  if(!localStorage.getItem("RestaurantId")){
-    history.push("/RestaurantLogin")
-  }
+    if (!localStorage.getItem("RestaurantId")) {
+        history.push("/RestaurantLogin")
+    }
 
     const [image, setImage] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -62,19 +62,25 @@ export default function RestaurantProfile() {
     const [restaurantId, setRestaurantId] = useState('');
     const [mode, setMode] = useState('');
 
-    
+    const [errors, setErrors] = React.useState({});
+
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(event.currentTarget);
+        
+        
+
         const data = new FormData(event.currentTarget);
         var url;
         if (image) {
             let imageData = new FormData()
             imageData.append('image', image)
             let response = await axios.post(`${backendServer}/image/dish`, imageData);
-      console.log("imageResponse",response.data.imageUrl)
-      url = response.data.imageUrl
-      setImageUrl(url);
+            console.log("imageResponse", response.data.imageUrl)
+            url = response.data.imageUrl
+            setImageUrl(url);
         }
 
         console.log(imageUrl)
@@ -90,7 +96,7 @@ export default function RestaurantProfile() {
             fromHrs: data.get('fromHrs'),
             toHrs: data.get('toHrs'),
             phone: data.get('phone'),
-            mode:data.get('mode'),
+            mode: data.get('mode'),
             imageUrl: url
         }
         console.log(payload)
@@ -137,7 +143,7 @@ export default function RestaurantProfile() {
         "margin-left": '45%'
     }
 
-    
+
 
     return (
         <>
@@ -240,7 +246,7 @@ export default function RestaurantProfile() {
                                     />
                                 </Grid>
 
-                                
+
 
                                 <Grid item xs={12} sm={4}>
                                     <TextField
@@ -301,9 +307,24 @@ export default function RestaurantProfile() {
                                         id="phone"
                                         label="Phone Number"
                                         name="phone"
+                                        inputProps={{ maxLength: 10 }}
                                         value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
+                                        onChange={(e) =>{ setPhone(e.target.value)
+                                            let newerror = {}
+                                            console.log("phone", phone)
+                                            newerror['phone1']= ''
+                                    
+                                            let reg = new RegExp(/^\d*$/).test(phone);
+                                            if (!reg) {
+                                                newerror['phone1'] = "Only numbers are permitted"
+                                                setErrors(newerror);
+                                            }
+                                    
+                                            console.log("error", errors)}
+                                        }
                                         autoComplete="phone"
+                                        error={Boolean(errors?.phone1)}
+                                        helperText={errors?.phone1}
                                         autoFocus
                                     />
                                 </Grid>
@@ -318,8 +339,29 @@ export default function RestaurantProfile() {
                                         label="Pin Code"
                                         name="pincode"
                                         value={pincode}
-                                        onChange={(e) => setPincode(e.target.value)}
+                                        onChange={(e) => {setPincode(e.target.value)
+                                            let newerror = {}
+                                            console.log("zip", pincode.length)
+                                           
+                                    
+                                            let reg = new RegExp(/^\d*$/).test(pincode);
+                                            if (!reg) {
+                                                newerror['zip'] = "Only numbers are permitted"
+                                                setErrors(newerror);
+                                            }
+                                            else if(pincode.length > 4)
+                                            {
+                                                newerror['zip'] = 'Zip Code should be 5 digits'
+                                                setErrors(newerror);
+                                            }
+                                           
+                                            
+                                    
+                                            console.log("error", errors)
+                                        }}
                                         autoComplete="pincode"
+                                        error={Boolean(errors?.zip)}
+                                        helperText={errors?.zip}
                                         autoFocus
                                     />
                                 </Grid>

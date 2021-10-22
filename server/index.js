@@ -17,6 +17,7 @@ const Dishes = require("./routes/Dishes")
 const Favourites = require("./routes/Favourites")
 const Orders = require("./routes/Orders")
 const DeliveryAddress = require("./routes/DeliveryAddress")
+const mongoose = require("mongoose");
 
 
 const app = express();
@@ -27,10 +28,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 //app.use("/",imagestore)
 var corsOptions = {
-    origin: "http://18.117.130.13:3000"
+    origin: "http://localhost:3000"
   };
 
-
+  mongoose
+  .connect(
+    "mongodb+srv://admin:admin@cluster0.hkqfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then((result) => {
+    app.listen(3001, () => {
+      console.log("DB and Server connected");
+    });
+  });
 
 // con.connect(function(err) {
 //     if (err) throw err;
@@ -60,10 +71,10 @@ app.use("/uber-eats/api", DeliveryAddress)
 //     console.log("hello")
 // })
 
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
 
-app.listen(3001, () => {
-    console.log(`Running on port ${PORT}`)
-})
+// app.listen(3001, () => {
+//     console.log(`Running on port ${PORT}`)
+// })
 
 module.exports = app;

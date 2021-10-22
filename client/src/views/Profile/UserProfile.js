@@ -57,6 +57,61 @@ const UserProfile = () => {
   const [restaurant, setRestaurant] = useState([]);
 
   const [file, setFile] = useState('');
+
+  const [errors, setErrors] = useState({})
+
+  const findFormErrors = () => {
+
+    // const zipcode = zipcode
+    //  const phonenumber1 = phonenumber
+
+    let isValid = true;
+
+    let newErrors = {}
+    // name errors
+
+    if (!phonenumber || phonenumber === '') 
+    {
+      newErrors["phonenumber"] = 'cannot be blank!'
+      isValid = false;
+    }
+    if (typeof phonenumber !== "undefined") {
+          
+      var pattern = new RegExp(/^[0-9\b]+$/);
+      if (!pattern.test(phonenumber)) {
+        isValid = false;
+        newErrors["phonenumber"] = "Please enter only number.";
+      }else if(phonenumber.length != 10){
+        isValid = false;
+        newErrors["phonenumber"] = "Please enter valid phone number.";
+      }
+    }
+
+    if(!zipcode || zipcode === '')
+    {
+      newErrors["Zip"] = "Zip Code cannot be blank"
+      isValid = false;
+    }
+    if(zipcode.length != 5)
+    {
+      newErrors["Zip"] = "Zip Code should be 5 digits"
+      isValid = false;
+
+    }
+    
+    // food errors
+
+   // isValid = true;
+
+    // Conditional logic:
+    if (Object.keys(newErrors).length > 0) {
+      // We got errors!
+      // console.log("errors", newErrors)
+      setErrors(newErrors)
+    }
+    return isValid
+  
+}
   // const [emailUpdate, setEmail] = useState('');
   // const [fullnameUpdate, setFullname] = useState('');
   // const [phonenumberUpdate, setPhonenumber] = useState('');
@@ -76,6 +131,8 @@ const UserProfile = () => {
     history.push("/LandingPage")
   }
 
+
+
   const updateProfile = async (event) => {
 
     event.preventDefault();
@@ -88,6 +145,10 @@ const UserProfile = () => {
     //         "content-type": "multipart/form-data"
     //     }
     // };
+   
+    if(findFormErrors()){
+
+      console.log("phonenumber", phonenumber)
     if (image) {
       let imageData = new FormData()
       imageData.append('image', image)
@@ -95,7 +156,7 @@ const UserProfile = () => {
       let url = `${backendServer}/image/user`
 
       const response = await axios.post(url, imageData);
-      console.log("imageResponse",response.data.imageUrl)
+      console.log("imageResponse 123", response.data.imageUrl)
       url1 = response.data.imageUrl
       console.log("URL", url1)
       setImageUrl(url1);
@@ -103,7 +164,7 @@ const UserProfile = () => {
 
 
 
-      console.log("country", imageUrl)
+    console.log("country", imageUrl)
     let payload = {
       email,
       fullname,
@@ -117,17 +178,20 @@ const UserProfile = () => {
       state,
       zipcode
     }
-    console.log("payload", payload)
+    console.log("payload 123", payload)
+    console.log("errors", errors.phonenumber)
 
     // const response = await
-     axios.post(`${backendServer}/UserProfile`, payload)
+    axios.post(`${backendServer}/UserProfile`, payload)
       .then((response) => {
         console.log(response);
         setFile("");
         //window.location.reload(false);
         history.push("/RestaurantView")
       });
-  };
+  }
+}
+
 
 
   useEffect(async () => {
@@ -153,12 +217,12 @@ const UserProfile = () => {
 
   }, []);
 
-  useEffect(async () =>{
+  useEffect(async () => {
     const userid = localStorage.getItem("CustomerID")
     const response = await axios.get(`${backendServer}/favourites/${userid}`)
     setRestaurant(response.data);
 
-  },[])
+  }, [])
 
 
 
@@ -208,15 +272,15 @@ const UserProfile = () => {
                       />
                     </div>
                     <br></br>
-                    <h6 class="user-name" style={{color:'blue'}}>Welcome {fullname}</h6>
+                    <h6 class="user-name" style={{ color: 'blue' }}>Welcome {fullname}</h6>
                     {/* <h6 class="user-email"> {email}</h6> */}
                   </div>
                   <div class="about">
 
-                    <h5 style={{color:'blue'}}>Your Favourite Restaurant's</h5>
+                    <h5 style={{ color: 'blue' }}>Your Favourite Restaurant's</h5>
                     {restaurant.map((card) => (
 
-                    <p>{card.RestaurantName}</p>
+                      <p>{card.RestaurantName}</p>
 
                     ))}
                   </div>
@@ -257,9 +321,11 @@ const UserProfile = () => {
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
                       <label for="phone">Phone</label>
-                      <input type="text" class="form-control" id="phone" placeholder={phonenumber} onChange={(event) => {
+                      <input type="number" size="10" class="form-control" id="phone" required placeholder={phonenumber} onChange={(event) => {
                         setPhonenumber(event.target.value);
+
                       }} />
+                      <div className="text-danger">{errors.phonenumber}</div>
                     </div>
                   </div>
 
@@ -300,7 +366,7 @@ const UserProfile = () => {
                       <label for="sTate">State</label>
                       <input type="text" class="form-control" id="state" placeholder={state} onChange={(event) => {
                         setState(event.target.value);
-                      }}/>
+                      }} />
                     </div>
                   </div>
                   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -309,6 +375,8 @@ const UserProfile = () => {
                       <input type="text" class="form-control" id="zip" placeholder={zipcode} onChange={(event) => {
                         setZipcode(event.target.value);
                       }} />
+                      <div className="text-danger">{errors.Zip}</div>
+
                     </div>
                   </div>
                 </div>

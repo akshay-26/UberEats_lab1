@@ -11,6 +11,8 @@ import { useHistory } from 'react-router-dom';
 import {useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import {signed} from '../actions';
+import { Row, Col, Alert } from 'react-bootstrap';
+import jwt_decode from 'jwt-decode';
 
 
 const RegisterUser = () =>{
@@ -20,17 +22,30 @@ const RegisterUser = () =>{
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [alert, setAlert] = useState('');
   
     const Register =()=> {
-          axios.post(`${backendServer }/RegisterUser`, 
+          axios.post(`${backendServer }/RegisterUser1`, 
         {username: username, useremail:email, userpassword: password }
         ).then((response)=>{
             console.log(response)
+            const tokenArray = response.data.token.split(' ');
+          localStorage.setItem('token', response.data.token);
+          // eslint-disable-next-line prefer-const
+          let decodedToken = jwt_decode(tokenArray[1]);
+          console.log("decodedToken", decodedToken)
+          // eslint-disable-next-line no-underscore-dangle
+          localStorage.setItem('user_id', decodedToken._id);
+          //console.log(token);
+          localStorage.setItem('EmailId', decodedToken.EmailId);
+          localStorage.setItem('CustomerName', decodedToken.CustomerName);
       dispatch(signed(username, email ));
 
       history.push('/RestaurantView')
 
-        });
+        }).catch((error) => {
+          setAlert("Email Already Exists")
+        })
        
   //    return email.length > 0&& password.length > 0;
     }
@@ -92,7 +107,10 @@ const RegisterUser = () =>{
         <Button block size="lg" type="submit" onClick={()=>Register()} style={styleimg} disabled={!validateForm()}>
           Submit
         </Button>
+      {alert.length > 0 && < Alert variant="danger" > {alert} </Alert>}
+
       </Form>
+
     </div> 
     </>
     )
