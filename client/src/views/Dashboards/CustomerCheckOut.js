@@ -20,6 +20,8 @@ import axios from 'axios';
 import backendServer from '../../Config';
 import {  createMuiTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 
 const steps = ['Review your order', 'Delivery address', 'Place Order'];
 
@@ -49,10 +51,12 @@ if(!localStorage.getItem("CustomerID")){
     const history = useHistory();
 
     const isPlaceOrder = () => {
+        console.log("isPlaceOrder")
         return activeStep + 1 == steps.length;
     }
 
     const isAddressfilled = () => {
+        console.log("isAddressfilled")
         return activeStep + 1 == 2 && (selectedAddress == "None" || selectedAddress == "");
     }
 
@@ -70,7 +74,9 @@ if(!localStorage.getItem("CustomerID")){
         let restaurantId = sessionStorage.getItem('currentRestaurant');
         let TotalAmt = sessionStorage.getItem("TotalAmt")
         console.log("total amount", TotalAmt)
-        axios.post(`${backendServer}/orders/customer/${customerId}`, { addressId: addressId, cart: cart, deliverytype: mode, restaurantId: restaurantId , TotalAmt: TotalAmt})
+        let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
+        axios.post(`${backendServer}/orders/customer/${customerId}`,
+         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId })
             .then(response => {
                 console.log("post order", response.data)
                 setPostedOrder(response.data);
@@ -83,8 +89,10 @@ if(!localStorage.getItem("CustomerID")){
     }
 
     const handleNext = async () => {
+        console.log("handleNext")
         setActiveStep(activeStep + 1);
         if (isAddressfilled()) {
+        console.log("isAddressfilled")
             let address = {
                 "addressLine1": addr1,
                 "addressLine2": addr2,
@@ -99,6 +107,7 @@ if(!localStorage.getItem("CustomerID")){
             sessionStorage.setItem('deliveryAddress', JSON.stringify(address));
         }
         if (isPlaceOrder()) {
+        console.log("isAddressfilled")
             let customerId = localStorage.getItem('CustomerID');
             let payload = {
                 "addressLine1": addr1,
@@ -112,8 +121,9 @@ if(!localStorage.getItem("CustomerID")){
             }
             console.log("in place order 1", payload);
             let address = JSON.parse(sessionStorage.getItem("deliveryAddress"));
+            console.log("deliveryAddress", address)
             let addressId;
-            if( ("AddressId" in address) == false){
+            if( ("_id" in address) == false){
                 console.log("in place order 2", payload)
                 let response = await axios.post(`${backendServer}/deliveryAddress/customer/${customerId}`, payload)
                 addressId = response.data.AddressId;
@@ -232,6 +242,21 @@ if(!localStorage.getItem("CustomerID")){
                             ) : (
                                 <React.Fragment>
                                     {getStepContent(activeStep)}
+                                    <br></br>
+                                    <Grid item xs={12}>
+                                    <TextField TextField id="standard-basic" label="Standard" variant="standard" 
+                                        margin="none"
+                                        
+                                        fullWidth
+                                        id="name"
+                                        label="Any restaurant request? We will try our best to convey it"
+                                        name="name"
+                                        autoComplete="name"
+                                        value=""
+                                        onChange={(e) => setName(e.target.value)}
+                                        
+                                    />
+                                </Grid>
                                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                         {activeStep !== 0 && (
                                             <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -246,6 +271,7 @@ if(!localStorage.getItem("CustomerID")){
                                             {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                                         </Button>
                                     </Box>
+                                   
                                 </React.Fragment>
                             )}
                         </React.Fragment>

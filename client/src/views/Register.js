@@ -35,7 +35,7 @@ const RegisterUser = () =>{
           let decodedToken = jwt_decode(tokenArray[1]);
           console.log("decodedToken", decodedToken)
           // eslint-disable-next-line no-underscore-dangle
-          localStorage.setItem('user_id', decodedToken._id);
+          localStorage.setItem('CustomerId', decodedToken.CustomerId);
           //console.log(token);
           localStorage.setItem('EmailId', decodedToken.EmailId);
           localStorage.setItem('CustomerName', decodedToken.CustomerName);

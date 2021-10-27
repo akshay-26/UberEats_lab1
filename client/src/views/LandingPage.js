@@ -9,10 +9,10 @@ import wavebg from '../images/layered-waves.svg';
 import backendServer from './../Config'
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Alert } from 'react-bootstrap';
-import {useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import logged from '../actions';
-
+import jwt_decode from 'jwt-decode';
 
 
 const LandingPage = () => {
@@ -20,6 +20,7 @@ const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [alert, setAlert] = useState('');
+  const [token, setToken] = useState('');
 
   const dispatch = useDispatch();
 
@@ -27,15 +28,26 @@ const LandingPage = () => {
     axios.post(`${backendServer}/LandingPage`,
       { useremail: email, userpassword: password }
     ).then((response) => {
-      localStorage.setItem("CustomerID", response.data[0].CustomerId)
+      setToken(response.data.token);
+      const tokenArray = response.data.token.split(' ');
+      localStorage.setItem('token', response.data.token);
+      console.log(response.data.token)
+      // eslint-disable-next-line prefer-const
+      let decodedToken = jwt_decode(tokenArray[1]);
+      // eslint-disable-next-line no-underscore-dangle
+      localStorage.setItem('CustomerID', decodedToken.CustomerId);
+      console.log("decodedToken", decodedToken);
+      localStorage.setItem('email', decodedToken.EmailId);
+     // localStorage.setItem('fullname', decodedToken.CustomerName);
+      //localStorage.setItem("CustomerID", response.data[0].CustomerId)
       console.log(response)
-      sessionStorage.setItem('country',response.data.Country);
-      sessionStorage.setItem('city',response.data.City);
+  
 
-      dispatch(logged(response.data[0].CustomerName, response.data[0].EmailId ));
+      dispatch(logged(decodedToken.EmailId));
       history.push('/RestaurantView')
     })
       .catch((error) => {
+        console.log(error)
         setAlert("Invalid User Name or Password")
       })
 

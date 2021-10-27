@@ -344,6 +344,7 @@ const RestaurantOrder = () => {
                                                 <option value="Delivered">Delivered</option>
                                                 <option value="Pick Up Ready">Pick Up Ready</option>
                                                 <option value="Picked Up">Picked Up</option>
+                                                <option value="Cancel Order">Cancel Order</option>
 
                                             </Select>
                                         </FormControl>

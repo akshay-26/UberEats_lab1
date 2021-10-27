@@ -29,8 +29,8 @@ export default function AddressForm(props) {
     const [selectedAddress,setSelectedAddress] = useState('');
     const [address, setAddress] = useState([{
         "AddressId": "",
-        "Address1": "",
-        "Address2": "",
+        "AddressLine1": "",
+        "AddressLine2": "",
         "City": "",
         "State": "",
         "PinCode": "",
@@ -44,8 +44,8 @@ export default function AddressForm(props) {
 
     const onAddressSelect = (event) => {
         let addr = address.filter(addr=>addr.SavaAsName==event.target.value)[0];
-        setAddr1(addr.Address1);
-        setAddr2(addr.Address2);
+        setAddr1(addr.AddressLine1);
+        setAddr2(addr.AddressLine2);
         setCity(addr.City);
         setCountry(addr.Country);
         setState(addr.State);
@@ -55,7 +55,7 @@ export default function AddressForm(props) {
         props.onAddressSelect(addr);
         if(event.target.value != "None"){
             setAddressName(addr.SavaAsName);
-            setSelectedAddress(addr.SavaAsName);
+            setSelectedAddress(addr.AddressName);
             setAddressSelection(true);
         }else{
             setAddressSelection(false);
@@ -69,19 +69,20 @@ export default function AddressForm(props) {
         console.log(savedAddress)
         if (savedAddress.data.length != 0){
             let newAddr = [...address,...savedAddress.data];
+            console.log("newAddr", newAddr)
             setAddress(newAddr);
         }
         let addr = JSON.parse(sessionStorage.getItem('deliveryAddress'))
         if(addr){
-            setAddr1(addr.Address1);
-            setAddr2(addr.Address2);
+            setAddr1(addr.AddressLine1);
+            setAddr2(addr.AddressLine2);
             setCity(addr.City);
             setCountry(addr.Country);
             setState(addr.State);
             setPincode(addr.PinCode);
-            setAddressName(addr.SavaAsName);
+            setAddressName(addr.AddressName);
             setChecked(addr.Save);
-            setSelectedAddress(addr.SavaAsName);
+            //setSelectedAddress(addr.SavaAsName);
             if(("Save" in addr)==false){
                 setAddressSelection(true);
             }

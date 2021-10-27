@@ -48,7 +48,7 @@ export default function CustomerDashBoard() {
       value: "Veg"
     }, {
       key: "nonveg",
-      value: "Non Veg"
+      value: "Non-Veg"
     }, {
       key: "vegan",
       value: "Vegan"
@@ -73,6 +73,10 @@ export default function CustomerDashBoard() {
 
   const CurrRestaurantDetails = JSON.parse(sessionStorage.getItem('currentRestaurantDetails'))
   console.log("sesson Value", CurrRestaurantDetails)
+
+  console.log({cart})
+  console.log({tempCart})
+
 
   useEffect(async () => {
     const restaurantId = sessionStorage.getItem('currentRestaurant');
@@ -117,7 +121,7 @@ export default function CustomerDashBoard() {
       return;
     }
     let newCart = [...cart, dish];
-    let index = cart.findIndex(item => item.DishId === dish.DishId);
+    let index = cart.findIndex(item => item.DishId === dish._id);
     if (index == -1) {
       newCart = [...cart, { ...dish, Quantity: 1 }]
     } else {
@@ -131,7 +135,7 @@ export default function CustomerDashBoard() {
 
   const onRemoveFromCart = (dish) => {
     let newCart = [...cart]
-    let index = newCart.findIndex(item => item.DishId === dish.DishId)
+    let index = newCart.findIndex(item => item.DishId === dish._id)
     if (index == -1)
       return;
     newCart[index].Quantity > 1 ? newCart[index].Quantity-- : newCart.splice(index, 1);
@@ -203,7 +207,7 @@ export default function CustomerDashBoard() {
                 color="text.primary"
                 gutterBottom
               >
-                Hu
+                Hi
               </Typography>
               <Typography variant="h5" align="center" color="text.secondary" paragraph>
                 You deserve the best food in the city
@@ -273,10 +277,10 @@ export default function CustomerDashBoard() {
                         {card.DishDesc}
                       </Typography>
                       <Typography>
-                        {card.Price}
+                        $ {card.Price}
                       </Typography>
                       <Typography>
-                        Category: {card.Category}
+                        Category: {card.DishCategory}
                       </Typography>
                       <Typography>
                         Type: {card.DishType}

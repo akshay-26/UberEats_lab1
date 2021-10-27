@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import backendServer from '../../Config';
+import TextField from '@mui/material/TextField';
 
 export default function Receipt(props) {
 
@@ -118,6 +119,8 @@ export default function Receipt(props) {
                             <Grid item xs={6}>
                                 <Typography gutterBottom>${getFinalPrice().toFixed(2)}</Typography>
                             </Grid>
+
+                          
                         </React.Fragment>
                     </Grid>
                 </Grid>

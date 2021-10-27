@@ -68,9 +68,6 @@ function RestaurantDashboard() {
   };
 
 
-
- 
-
   useEffect(() => {
     setFilteredPosts(cards.filter((cards) => cards.DishName === searchValue));
   }, [cards, searchValue]);
@@ -195,7 +192,7 @@ function RestaurantDashboard() {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button size="small" onClick={() => EditDish(card.DishId)}><EditIcon></EditIcon>Edit</Button>
+                      <Button size="small" onClick={() => EditDish(card._id)}><EditIcon></EditIcon>Edit</Button>
                       {/* onClick={() => goToDetails(name)} */}
                       {/* <Button size="small">Edit</Button> */}
                     </CardActions>

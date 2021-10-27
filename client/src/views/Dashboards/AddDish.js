@@ -102,7 +102,7 @@ const AddDish = () => {
            
 
         let payload = {
-            dishId: dishId,
+            DishId: dishId,
             restaurantId: restaurantId,
             dishdesc: data.get('desc'),
             category: data.get('category'),
@@ -128,9 +128,10 @@ const AddDish = () => {
 
     useEffect(async () => {
         const dishId = sessionStorage.getItem('dishId');
+        const restaurantId = localStorage.getItem('RestaurantId');
 
         if (dishId) {
-            const response = await axios.get(`${backendServer}/dishes/${dishId}`);
+            const response = await axios.get(`${backendServer}/dishes/${dishId}/${restaurantId}`);
             console.log("Dishes response", response)
             const dish = response.data;
             setName(dish.DishName);
@@ -159,18 +160,6 @@ const AddDish = () => {
     }
 
 
-    // useEffect(async () => {
-
-    //     const DishId = localStorage.getItem("editDish");
-    //     console.log("Add Dish Page", DishId)
-    //     if (DishId != '') {
-    //          const response = await axios.get(`${backendServer}/dishes/${DishId}`);
-    //         console.log("Dishes response", name)
-    //           const dish = response.data;
-    //         setName(dish.DishName);
-
-    //     }
-    // }, [])
 
 
     return (

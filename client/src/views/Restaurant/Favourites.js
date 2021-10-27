@@ -24,6 +24,7 @@ import { NearMeTwoTone } from '@material-ui/icons';
 import props from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import NavbarCustomer from '../NavbarCustomer';
 
 
 const theme = createTheme();
@@ -53,7 +54,7 @@ const Favourites = () => {
 
     return (
         <>
-            <Navbar />
+            <NavbarCustomer />
             <CssBaseline />
             <main>
                 <Box

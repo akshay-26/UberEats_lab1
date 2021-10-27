@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import { signed } from '../actions';
 import { Row, Col, Alert } from 'react-bootstrap';
-
+import jwt_decode from 'jwt-decode';
 
 
 const RestaurantRegister = () => {
@@ -25,12 +25,22 @@ const RestaurantRegister = () => {
 
 
     const Register = () => {
-        axios.post(`${backendServer}/RegisterUser/Restaurant`,
+        axios.post(`${backendServer}/RegisterUser/Restaurant1`,
             { RestaurantName: RestaurantName, useremail: email, userpassword: password }
         ).then((response) => {
-            console.log(response)
+            console.log("Restaurant Resgister", response)
+            const tokenArray = response.data.token.split(' ');
+            localStorage.setItem('Restauranttoken', response.data.token);
+            // eslint-disable-next-line prefer-const
+            let decodedToken = jwt_decode(tokenArray[1]);
+            console.log("decodedToken", decodedToken)
+            // eslint-disable-next-line no-underscore-dangle
+            localStorage.setItem('RestaurantId', decodedToken.RestaurantId);
+            //console.log(token);
+            localStorage.setItem('RestaurantEmail', decodedToken.RestaurantEmail);
+            localStorage.setItem('RestaurantName', decodedToken.RestaurantName);
             dispatch(signed(RestaurantName, email));
-            localStorage.setItem("RestaurantId",  response.data.Restaurantid)
+           // localStorage.setItem("RestaurantId",  response.data.Restaurantid)
             history.push('/RestaurantDashboard')
         })
         .catch((error) => {

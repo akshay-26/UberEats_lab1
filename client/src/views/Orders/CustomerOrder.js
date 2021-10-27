@@ -120,9 +120,9 @@ const CustomerOrder = () => {
 
   const history = useHistory();
 
-if(!localStorage.getItem("CustomerID")){
-  history.push("/LandingPage")
-}
+  if (!localStorage.getItem("CustomerID")) {
+    history.push("/LandingPage")
+  }
 
   const [OrderResponse, setOrderResponse] = useState([]);
 
@@ -135,8 +135,13 @@ if(!localStorage.getItem("CustomerID")){
   const [cards, setCards] = useState([]);
   const [currentCard, setCurrentCard] = useState([]);
   const [openOrder, setOpenOrder] = useState(false);
+  const [cancel, setCancel] = useState(false)
+  // const [cancel, setCancel] = React.useState({
+const [OrderId, setOrderId] = useState('')
+  //   CheckCancel: true
 
 
+  // });
 
   const onChange = (event) => {
     setSearch(event.target.value)
@@ -224,31 +229,72 @@ if(!localStorage.getItem("CustomerID")){
 
   const handleClose = () => {
     setOpen(false);
+
+    const idx = OrderResponse.findIndex(item=>item.OrderId==OrderId);
+        console.log("idx value", idx)
+       OrderResponse[idx].OrderStatus = "Cancel Order";
+
+       const response =   axios.post(`${backendServer}/restaurant/CancelOrders/${OrderId}`
+       ).then((response) =>{
+           console.log(response)
+       })
+       .catch((err) =>{
+           console.log(err)
+       })
+
+  };
+  const handleCloseNo = () => {
+    setOpen(false);
   };
 
   const onView = (card) => {
     setCurrentCard(card)
     console.log(card)
     setOpenOrder(true);
-}
+  }
 
-//pagination
 
-const [page, setPage] = React.useState(0);
-const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const CancelOrder = (card, cardId) => {
+    console.log("card.OrderStatus", card.OrderStatus)
+    if (card.OrderStatus !=  "Order Received") {
+      setOrderId(cardId)
+      console.log("cardId", cardId)
+      setCancel(true)
+      console.log("able to cancel")
+      console.log(cancel)
 
-// Avoid a layout jump when reaching the last page with empty rows.
-const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - OrderResponse.length) : 0;
+      setOpen(true);
 
-const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-};
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
+    }
+    else {
+      setOpen(true);
+
+      console.log(cancel)
+
+      setCancel(false)
+      return;
+    }
+  }
+  //console.log("setCancel", cancel)
+
+  //pagination
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - OrderResponse.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // pagination
 
@@ -267,7 +313,7 @@ const handleChangeRowsPerPage = (event) => {
         justifyContent: "center",
         alignItems: "center"
       }}>
-        <List sx={{ width: '100%', maxWidth: 660, bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%', maxWidth: 860, bgcolor: 'background.paper' }}>
           {/* {OrderResponse.map((card, index) => { */}
           {(rowsPerPage > 0
             ? OrderResponse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -301,6 +347,11 @@ const handleChangeRowsPerPage = (event) => {
                 <Button variant="outlined" onClick={() => onView(card)}>
                   View Receipt
                 </Button>
+                &nbsp; &nbsp;
+                <Button variant="outlined" onClick={() => CancelOrder(card, card.OrderId)}>
+                  {/*  onClick={handleClickOpen} */}
+                  Cancel Order
+                </Button>
 
 
                 {/* Receipt button */}
@@ -310,26 +361,26 @@ const handleChangeRowsPerPage = (event) => {
             </>
           ))}
 
-<TableFooter align="right">
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[2,5,10,, { label: 'All', value: -1 }]}
-              colSpan={6}
-              count={OrderResponse.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'rows per page',
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
+          <TableFooter align="right">
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[2, 5, 10, , { label: 'All', value: -1 }]}
+                colSpan={6}
+                count={OrderResponse.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
 
         </List>
 
@@ -345,6 +396,52 @@ const handleChangeRowsPerPage = (event) => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* cancel order dialog */}
+        {cancel ?
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Cancel Order?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you want to cancel your order and sleep on an empty stomach?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Yes</Button>
+              <Button onClick={handleCloseNo} autoFocus>
+                No
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          // {/* cancel order dialog */}
+          :
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Cancel Order"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Your Order Has Been Received By The Restaurant, Please Call Our Customer Care Agent To Cancel Your Order
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseNo}>Close</Button>
+            </DialogActions>
+          </Dialog>
+        }
       </div>
     </>
 

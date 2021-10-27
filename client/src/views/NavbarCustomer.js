@@ -71,6 +71,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Badge } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -295,11 +296,13 @@ const Navbar = (props) => {
     if (cart.length != 0 && dish.RestaurantId != cart[0].RestaurantId) {
       setCurrentRestaurant(cart[0].RestaurantId);
       setNewRestaurant(dish.RestaurantId);
+      console.log("Curr res", currentRestaurant)
       setMultipleOrderDialog(true);
       setTempCart([dish]);
       return;
     }
     let newCart = [...cart, dish];
+    console.log("new cart", newCart)
     let index = cart.findIndex(item => item.DishId === dish.DishId);
     if (index == -1) {
       newCart = [...cart, { ...dish, Quantity: 1 }]
@@ -320,6 +323,7 @@ const Navbar = (props) => {
     newCart[index].Quantity > 1 ? newCart[index].Quantity-- : newCart.splice(index, 1);
     if (newCart.length == 0)
       setOpenCart(false);
+    console.log("new cart", newCart)
     setCart(newCart)
     persistCartOnSession(newCart);
     console.log("cart", newCart);
@@ -698,6 +702,8 @@ const Navbar = (props) => {
                     <AddCircleOutlineIcon />
                   </IconButton>
                   <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>${item.Price} x {item.Quantity} nos = ${item.Price * item.Quantity}</Typography>
+                  <Button size="small" onClick={() => { onRemoveFromCart(item) }}><DeleteOutlineIcon></DeleteOutlineIcon></Button>
+
                 </ListItem>
               ))}
               <ListItem sx={{ py: 1, px: 0 }}>
