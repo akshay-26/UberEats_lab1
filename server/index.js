@@ -17,15 +17,24 @@ const Dishes = require("./routes/Dishes")
 const Favourites = require("./routes/Favourites")
 const Orders = require("./routes/Orders")
 const DeliveryAddress = require("./routes/DeliveryAddress")
+const passport = require("passport")
+
 const mongoose = require("mongoose");
-
-
+var kafka = require('./kafka/client');
+var {auth} = require("./utils/passport")
 const app = express();
-
+auth();
+app.use(passport.initialize())
 app.use(express.json())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 //app.use("/",imagestore)
 var corsOptions = {
     origin: "http://localhost:3000"

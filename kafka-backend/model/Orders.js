@@ -14,14 +14,14 @@ const Address = new Schema({
 });
 
 const ordersSchema = new Schema({
-        OrderId: { type: mongoose.Types.ObjectId, auto: true },
+        OrderId: { type: mongoose.Schema.Types.ObjectId, auto: true },
         CustomerId: { type: String, required: true },
         RestaurantId: { type: String, required: true },
         OrderStatus: { type: String, required: true },
         DeliveryType: { type: String, required: true },
         CreatedAt: { type: String, required: true },
         LastUpdatedTime: { type: String, required: true },
-        DeliveryAddress: {type: Address, required:true},
+        DeliveryAddress:[Address],
         OrderDetails: [{
             DishName: { type: String, required: true },
             DishDesc: { type: String, required: true },

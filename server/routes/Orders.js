@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt")
 const con = require("../connections/Dbconnection")
 const { v4: uuidv4 } = require('uuid');
 const Order = require("../model/Orders")
+const kafka = require("../kafka/client")
+const mongoose = require("mongoose");
 
 // router.get("/Orders/:id", function (req, res) {
 //     const CustomerId = req.params.id;
@@ -16,6 +18,26 @@ const Order = require("../model/Orders")
 
 //     });
 // });
+router.get("/Orders/:id", async function (req, res) {
+    const CustomerId = req.params.id;
+   kafka.make_request("Orders", req.params, function(err, results) {
+       console.log("In result")
+       console.log("result in msg", results)
+       if(err){
+           console.log("err", err)
+           res.json({
+               status: "Error",
+               msg: "Error",
+           })
+           res.status(400).end();
+       } else
+       {
+           console.log("inside else", results)
+           res.status(200).send(results)
+       }
+   })
+});
+
 
 // mongo
 
@@ -168,7 +190,7 @@ router.post("/restaurant/CancelOrders/:id1", async function (req, res) {
 
 router.post("/orders/customer/:id", async function (req, res) {
     console.log("orders", typeof(req.body.DeliveryAddress))
-    console.log(typeof(Order.DeliveryAddress))
+    console.log(req.body.Instructions)
     //let orderId = uuidv4();
     //let customerId = req.params.id;
     let cart = req.body.cart;
@@ -203,7 +225,8 @@ router.post("/orders/customer/:id", async function (req, res) {
         CreatedAt: currentTimeStamp,
         LastUpdatedTime: currentTimeStamp,
         DeliveryAddress: req.body.DeliveryAddress,
-        OrderDetails: orderDetails
+        OrderDetails: orderDetails,
+        Instructions: req.body.Instructions
     }
     const order = new Order({...orderPayload}); 
     const savedOrder = await order.save()
@@ -215,15 +238,15 @@ router.post("/orders/customer/:id", async function (req, res) {
 // mongo
 
 
-router.get("/orders/customer/:id", function (req, res) {
-    const customerId = req.params.id;
-    const query = "SELECT * FROM address as a INNER JOIN orders as o INNER JOIN restaurant as r on r.RestaurantId = o.RestaurantId and o.DeliveryAddressId = a.AddressId where o.CustomerId = ?";
-    //console.log(req);
-    con.query(query, [customerId], (err, results, fields) => {
-        console.log(err);
-        res.status(200).send(results);
-    });
-});
+// router.get("/orders/customer/:id", function (req, res) {
+//     const customerId = req.params.id;
+//     const query = "SELECT * FROM address as a INNER JOIN orders as o INNER JOIN restaurant as r on r.RestaurantId = o.RestaurantId and o.DeliveryAddressId = a.AddressId where o.CustomerId = ?";
+//     //console.log(req);
+//     con.query(query, [customerId], (err, results, fields) => {
+//         console.log(err);
+//         res.status(200).send(results);
+//     });
+// });
 
 // mongo customer order might not work
 

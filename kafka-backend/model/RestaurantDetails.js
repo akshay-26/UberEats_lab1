@@ -18,7 +18,6 @@ const RestaurantDetails = new mongoose.Schema({
     Location: {type: String,max: 1024 },
     RestaurantDesc: {type: String },
     PhoneNumber: {type: String, max: 1024},
-    WorkHrsFrom: {type: String, max: 1024},
     WorkHrsTo: {type: String, max: 1024},
     AddressId: {type: String},
     Image: {type: String},

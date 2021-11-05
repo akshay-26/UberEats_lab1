@@ -4,10 +4,10 @@ const bcrypt = require("bcrypt")
 const con = require("../connections/Dbconnection")
 const Customer = require("../model/CustomerDetails");
 const Restaurant = require("../model/RestaurantDetails");
-
+const { secret } = require('.././Config');
 const jwt = require("jsonwebtoken");
 const { auth } = require("../utils/passport");
-const secret = "hello";
+// const secret = "hello";
 auth();
 const saltRounds = 10;
 
@@ -34,7 +34,7 @@ router.post("/LandingPage", async (req, res) =>{
                 EmailId: user.EmailId,
                 CustomerPassword: user.CustomerPassword
             }
-        console.log(payload);
+        console.log(payload, secret);
         const token = await jwt.sign(payload, secret, {
             expiresIn: 1000000,
           });
@@ -145,7 +145,7 @@ router.post("/LandingPage", async (req, res) =>{
                 expiresIn: 1000000,
               });
            
-              res.status(200).json({ token: "jwt " + token });
+              res.status(200).json({ token: "JWT " + token });
             }
         }
         catch(err){

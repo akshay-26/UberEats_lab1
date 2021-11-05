@@ -49,6 +49,8 @@ if(!localStorage.getItem("CustomerID")){
     const [postedOrder, setPostedOrder] = useState([]);
     const [Total, setTotal] = useState('');
     const history = useHistory();
+    const [name, setName] = useState('')
+    console.log("instructions", name)
 
     const isPlaceOrder = () => {
         console.log("isPlaceOrder")
@@ -73,10 +75,12 @@ if(!localStorage.getItem("CustomerID")){
         console.log("port order cart", cart)
         let restaurantId = sessionStorage.getItem('currentRestaurant');
         let TotalAmt = sessionStorage.getItem("TotalAmt")
+        console.log("instructions", name)
         console.log("total amount", TotalAmt)
+        
         let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
         axios.post(`${backendServer}/orders/customer/${customerId}`,
-         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId })
+         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId , Instructions: name})
             .then(response => {
                 console.log("post order", response.data)
                 setPostedOrder(response.data);
@@ -243,6 +247,7 @@ if(!localStorage.getItem("CustomerID")){
                                 <React.Fragment>
                                     {getStepContent(activeStep)}
                                     <br></br>
+                                    {activeStep === steps.length - 1 ? 
                                     <Grid item xs={12}>
                                     <TextField TextField id="standard-basic" label="Standard" variant="standard" 
                                         margin="none"
@@ -252,11 +257,12 @@ if(!localStorage.getItem("CustomerID")){
                                         label="Any restaurant request? We will try our best to convey it"
                                         name="name"
                                         autoComplete="name"
-                                        value=""
+                                        value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         
                                     />
                                 </Grid>
+: <></>}
                                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                         {activeStep !== 0 && (
                                             <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>

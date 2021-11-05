@@ -118,20 +118,26 @@ router.post("/restaurant/Add/dishes", async (req, res) => {
 // mongo
 
 
-router.get("/dishes/:id", function (req, res) {
-    const dishId = req.params.id;
-    const query = "SELECT * FROM dishes where DishId = ?";
-    con.query(query, [dishId], (err, results, fields) => {
-        if (err) {
-            res.status(500).send({ message: "Entry does not exist" })
-        }
-        else {
-            console.log(results)
-            res.status(200).send(results[0]);
-        }
-    })
+// router.get("/dishes/:id", function (req, res) {
+//     const dishId = req.params.id;
+//     const query = "SELECT * FROM dishes where DishId = ?";
+//     con.query(query, [dishId], (err, results, fields) => {
+//         if (err) {
+//             res.status(500).send({ message: "Entry does not exist" })
+//         }
+//         else {
+//             console.log(results)
+//             res.status(200).send(results[0]);
+//         }
+//     })
 
-});
+// });
+
+router.get("/dishes/:id", async function(req, res) {
+    const dishId = req.params.id;
+    let dishes = await Restaurant.findOne({RestaurantId:dishId})
+    res.status(200).send(dishes.Dishes);
+})
 
 // mongo
 

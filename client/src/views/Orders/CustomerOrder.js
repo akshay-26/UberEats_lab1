@@ -313,7 +313,7 @@ const [OrderId, setOrderId] = useState('')
         justifyContent: "center",
         alignItems: "center"
       }}>
-        <List sx={{ width: '100%', maxWidth: 860, bgcolor: 'background.paper' }}>
+        <List sx={{ width: '100%', maxWidth: 960, bgcolor: 'background.paper' }}>
           {/* {OrderResponse.map((card, index) => { */}
           {(rowsPerPage > 0
             ? OrderResponse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

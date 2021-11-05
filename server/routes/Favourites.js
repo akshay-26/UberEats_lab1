@@ -29,19 +29,19 @@ router.post("/favourites/:id1/:id2", async function (req, res) {
 
 })
 
-router.post("/favourites1/:id1/:id2", function (req, res) {
-    const CustomerId = req.params.id1;
-    const RestaurantId = req.params.id2;
-    console.log(RestaurantId, CustomerId)
+// router.post("/favourites1/:id1/:id2", function (req, res) {
+//     const CustomerId = req.params.id1;
+//     const RestaurantId = req.params.id2;
+//     console.log(RestaurantId, CustomerId)
 
-    const query = "INSERT INTO Personalization (CustomerId, RestaurantId) VALUES(?, ?)"
-    con.query(query, [CustomerId, RestaurantId], (err, results, fields) => {
-        console.log(results, err, fields)
-        console.log("executed insert")
-        res.status(200).send(results)
-    })
+//     const query = "INSERT INTO Personalization (CustomerId, RestaurantId) VALUES(?, ?)"
+//     con.query(query, [CustomerId, RestaurantId], (err, results, fields) => {
+//         console.log(results, err, fields)
+//         console.log("executed insert")
+//         res.status(200).send(results)
+//     })
 
-})
+// })
 
 router.get("/favourites/:id", async (req, res) => {
     const CustomerId = req.params.id;
@@ -54,36 +54,31 @@ router.get("/favourites/:id", async (req, res) => {
         return res.status(400).send("Customer not found");
     }
     const restaurantIds = customer.Favourites.toObject();
-    const favourites = await Restaurants.find({RestaurantId: {$in: restaurantIds}});
+    const favourites = await Restaurant.find({RestaurantId: {$in: restaurantIds}});
     res.status(200).send(favourites);
 })
 
-router.get("/favourites1/:id", (req, res) => {
-    const CustomerId = req.params.id;
-    console.log(CustomerId);
-    let restId = [];
-    var count = 0;
+// router.get("/favourites1/:id", (req, res) => {
+//     const CustomerId = req.params.id;
+//     console.log(CustomerId);
+//     let restId = [];
+//     var count = 0;
 
-    const query1 = "select * from restaurant where RestaurantId IN (select RestaurantId from Personalization where CustomerId = ?)"
-    con.query(query1, [CustomerId], (err, results, fields) => {
-        if (err) {
-            if(err.code ==='ER_DUP_ENTRY'){
-            console.log(results, "hello");
-            res.status(400).send({error:"Restaurant Already added as favourite"})
-            }
-        }
-        // restId = results;
-        else {
-            console.log("here", results)
-            res.status(200).send(results)
-        }
-    })
-})
+//     const query1 = "select * from restaurant where RestaurantId IN (select RestaurantId from Personalization where CustomerId = ?)"
+//     con.query(query1, [CustomerId], (err, results, fields) => {
+//         if (err) {
+//             if(err.code ==='ER_DUP_ENTRY'){
+//             console.log(results, "hello");
+//             res.status(400).send({error:"Restaurant Already added as favourite"})
+//             }
+//         }
+//         // restId = results;
+//         else {
+//             console.log("here", results)
+//             res.status(200).send(results)
+//         }
+//     })
+// })
 
-
-        
-      
-    
-    
 
 module.exports = router;

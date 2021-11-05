@@ -7,7 +7,7 @@ const Restaurant = require("../model/RestaurantDetails");
 
 const jwt = require("jsonwebtoken");
 const { auth } = require("../utils/passport");
-const secret = "hello";
+// const secret = "hello";
 auth();
 
 const saltRounds = 10;

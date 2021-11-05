@@ -341,7 +341,7 @@ export default function RestaurantProfile() {
                                         value={pincode}
                                         onChange={(e) => {setPincode(e.target.value)
                                             let newerror = {}
-                                            console.log("zip", pincode.length)
+                                            //console.log("zip", pincode.length)
                                            
                                     
                                             let reg = new RegExp(/^\d*$/).test(pincode);

@@ -64,13 +64,13 @@ router.get("/Restaurant", async function(req,res){
 
 // mongo
 
-router.get("/dishes", (req, res) =>{
-    const name = req.query.name;
-    const query = "select * from dishes where RestaurantId = ?";
-    con.query(query, [RestaurantId], (err, result, fields) =>{
-        res.status(200).send(result);
-    })
-})
+// router.get("/dishes", (req, res) =>{
+//     const name = req.query.name;
+//     const query = "select * from dishes where RestaurantId = ?";
+//     con.query(query, [RestaurantId], (err, result, fields) =>{
+//         res.status(200).send(result);
+//     })
+// })
 
 
 // mongo

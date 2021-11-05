@@ -29,8 +29,10 @@ export default function Receipt(props) {
     const [mode, setMode] = useState('');
 
     useEffect(async () => {
-        setOrder(props.order);
+        setOrder(props.order.DeliveryAddress);
+        console.log("order Res", props.order.DeliveryAddress)
         const response = await axios.get(`${backendServer}/orders/${props.order.OrderId}/items`)
+        //console.log(response.data)
         setOrderDetails(response.data);
     }, []);
 
@@ -82,7 +84,15 @@ export default function Receipt(props) {
                     <Typography gutterBottom>{order.AddressLine1}</Typography>
                     <Typography gutterBottom>{order.AddressLine2}</Typography>
                     <Typography gutterBottom>{order.City},{order.State},{order.PinCode}</Typography>
+                    <h5>Special Instructions</h5>
+                    {order.Instructions == '' ?(
+                        <Typography gutterBottom>{"No Special Request"}</Typography> 
+                    ): (
+                        <Typography gutterBottom>{order.Instructions}</Typography>)}
+                    
                 </Grid>
+                  
+              
                 <Grid item container direction="column" xs={12} sm={6}>
                     <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                         Details
@@ -119,7 +129,7 @@ export default function Receipt(props) {
                             <Grid item xs={6}>
                                 <Typography gutterBottom>${getFinalPrice().toFixed(2)}</Typography>
                             </Grid>
-
+                           
                           
                         </React.Fragment>
                     </Grid>

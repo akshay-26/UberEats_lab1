@@ -163,9 +163,10 @@ const UserProfile = () => {
     }
 
 
-
+    var CustomerId =  localStorage.getItem("CustomerID")
     console.log("country", imageUrl)
     let payload = {
+      CustomerId,
       email,
       fullname,
       nickname,
@@ -182,7 +183,15 @@ const UserProfile = () => {
     console.log("errors", errors.phonenumber)
 
     // const response = await
-    axios.post(`${backendServer}/UserProfile`, payload)
+    const tokenValue = localStorage.getItem('token');
+    //axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.post(`${backendServer}/UserProfile`, payload ,{
+      headers: {
+          'authorization': tokenValue,
+          'Accept' : 'application/json',
+          'Content-Type': 'application/json'
+      }
+  })
       .then((response) => {
         console.log(response);
         setFile("");
@@ -198,20 +207,21 @@ const UserProfile = () => {
 
     const val = sessionStorage.getItem("currentUser");
     console.log(val)
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     const response = await axios.get(`${backendServer}/UserProfile/User`, { params: { email: val } });
 
-    console.log("user profile", response)
+    console.log("user profile", response.data.EmailId)
 
     if (val) {
-      setEmail(response.data[0].EmailId);
-      setFullname(response.data[0].CustomerName);
-      setNickname(response.data[0].NickName)
-      setPhonenumber(response.data[0].PhoneNumber)
-      setImageUrl(response.data[0].image);
-      setCity(response.data[0].City)
-      setCountry(response.data[0].Country)
-      setState(response.data[0].State)
-      setZipcode(response.data[0].ZipCode)
+      setEmail(response.data.EmailId);
+      setFullname(response.data.CustomerName);
+      setNickname(response.data.NickName)
+      setPhonenumber(response.data.PhoneNumber)
+      setImageUrl(response.data.Image);
+      setCity(response.data.City)
+      setCountry(response.data.Country)
+      setState(response.data.State)
+      setZipcode(response.data.ZipCode)
     }
     // console.log(dbemail);
 
