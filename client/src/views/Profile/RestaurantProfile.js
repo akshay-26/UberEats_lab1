@@ -100,7 +100,7 @@ export default function RestaurantProfile() {
             imageUrl: url
         }
         console.log(payload)
-        axios.post(`${backendServer}/restaurant/${restaurantId}`, payload)
+        axios.post(`${backendServer}/restaurant/profile`, payload)
             .then(response => {
                 history.push("/RestaurantDashBoard")
             })

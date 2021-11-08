@@ -79,8 +79,8 @@ if(!localStorage.getItem("CustomerID")){
         console.log("total amount", TotalAmt)
         
         let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
-        axios.post(`${backendServer}/orders/customer/${customerId}`,
-         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId , Instructions: name})
+        axios.post(`${backendServer}/orders/customer`,
+         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name})
             .then(response => {
                 console.log("post order", response.data)
                 setPostedOrder(response.data);
@@ -121,7 +121,8 @@ if(!localStorage.getItem("CustomerID")){
                 "country": country,
                 "pincode": pincode,
                 "addressName": addressName,
-                "save": checked
+                "save": checked,
+                "CustomerId": customerId
             }
             console.log("in place order 1", payload);
             let address = JSON.parse(sessionStorage.getItem("deliveryAddress"));
@@ -129,7 +130,7 @@ if(!localStorage.getItem("CustomerID")){
             let addressId;
             if( ("_id" in address) == false){
                 console.log("in place order 2", payload)
-                let response = await axios.post(`${backendServer}/deliveryAddress/customer/${customerId}`, payload)
+                let response = await axios.post(`${backendServer}/deliveryAddress/customer`, payload)
                 addressId = response.data.AddressId;
             } else {
                 addressId = address.AddressId;

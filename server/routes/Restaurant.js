@@ -3,6 +3,7 @@ const router = require("express").Router();
 //const bcrypt = require("bcrypt")
 const con = require("../connections/Dbconnection")
 const Restaurant = require("../model/RestaurantDetails")
+const kafka = require("../kafka/client")
 
 // router.get("/Restaurants", (req, res) => {
 
@@ -27,6 +28,7 @@ const Restaurant = require("../model/RestaurantDetails")
 // })
 
 //mongo
+
 
 router.get("/Restaurants", async (req, res) => {
 
@@ -55,6 +57,25 @@ router.get("/Restaurants", async (req, res) => {
 // });
 
 // mongo
+router.get("/Restaurant", async function (req, res) {
+  const CustomerId = req.params.id;
+ kafka.make_request("GetRestaurant", req.params, function(err, results) {
+     console.log("In result")
+     console.log("result in msg", results)
+     if(err){
+         console.log("err", err)
+         res.json({
+             status: "Error",
+             msg: "Error",
+         })
+         res.status(400).end();
+     } else
+     {
+         console.log("inside else", results)
+         res.status(200).send(results)
+     }
+ })
+});
 
 router.get("/Restaurant", async function(req,res){
     const restaurants = await Restaurant.find();

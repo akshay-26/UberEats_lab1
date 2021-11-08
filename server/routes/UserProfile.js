@@ -4,7 +4,7 @@ const Restaurant = require("../model/RestaurantDetails")
 const Customer = require("../model/CustomerDetails")
 const mongoose = require("mongoose");
 const { checkAuth } = require("../utils/passport");
-
+const kafka = require("../kafka/client")
 // router.get("/UserProfile/User", (req, res) => {
 //   const email = req.query.email;
 //   console.log("my email", req)
@@ -19,39 +19,78 @@ const { checkAuth } = require("../utils/passport");
 //     // })
 //   })
 // })
-
-router.get("/UserProfile/User", checkAuth, async (req, res) =>{
-  const email = req.query.email;
-  const customer = await Customer.findOne({EmailId:email});
-    res.status(200).send(customer);
-})
-
-router.post("/UserProfile", async (req, res) => {
-    
-  const customerId = mongoose.Types.ObjectId(req.body.CustomerId);
-  console.log("customerId", customerId )
-  let customer = await Customer.findOne({CustomerId:customerId});
-  if (!customer) {
-      return res.status(400).send("Customer not found");
-  }
-
-  payload = {
-     
-       CustomerName : req.body.fullname,
-       NickName : req.body.nickname,
-       PhoneNumber : req.body.phonenumber,
-       City : req.body.city,
-       State : req.body.state,
-       ZipCode : req.body.zipcode,
-       Image : req.body.url1,
-       Country : req.body.country
-  }
-
-  Customer.findOneAndUpdate({ CustomerId: customerId }, payload,{returnNewDocument:true}, function (err, updateCustomer) {
-      if (err) return res.send(500, { error: err });
-      return res.status(200).send(updateCustomer);
-  });
+router.get("/UserProfile/User", async function (req, res) {
+  //const CustomerId = req.params.id;
+ kafka.make_request("GetUser", req.query, function(err, results) {
+     console.log("In result")
+     console.log("result in msg", results)
+     if(err){
+         console.log("err", err)
+         res.json({
+             status: "Error",
+             msg: "Error",
+         })
+         res.status(400).end();
+     } else
+     {
+         console.log("inside else", results)
+         res.status(200).send(results)
+     }
+ })
 });
+
+
+// router.get("/UserProfile/User", checkAuth, async (req, res) =>{
+//   const email = req.query.email;
+//   const customer = await Customer.findOne({EmailId:email});
+//     res.status(200).send(customer);
+// })
+router.post("/UserProfile", async function (req, res) {
+  //const CustomerId = req.params.id;
+ kafka.make_request("PostUser", req.body, function(err, results) {
+     console.log("In result")
+     console.log("result in msg", results)
+     if(err){
+         console.log("err", err)
+         res.json({
+             status: "Error",
+             msg: "Error",
+         })
+         res.status(400).end();
+     } else
+     {
+         console.log("inside else", results)
+         res.status(200).send(results)
+     }
+ })
+});
+
+// router.post("/UserProfile", async (req, res) => {
+    
+//   const customerId = mongoose.Types.ObjectId(req.body.CustomerId);
+//   console.log("customerId", customerId )
+//   let customer = await Customer.findOne({CustomerId:customerId});
+//   if (!customer) {
+//       return res.status(400).send("Customer not found");
+//   }
+
+//   payload = {
+     
+//        CustomerName : req.body.fullname,
+//        NickName : req.body.nickname,
+//        PhoneNumber : req.body.phonenumber,
+//        City : req.body.city,
+//        State : req.body.state,
+//        ZipCode : req.body.zipcode,
+//        Image : req.body.url1,
+//        Country : req.body.country
+//   }
+
+//   Customer.findOneAndUpdate({ CustomerId: customerId }, payload,{returnNewDocument:true}, function (err, updateCustomer) {
+//       if (err) return res.send(500, { error: err });
+//       return res.status(200).send(updateCustomer);
+//   });
+// });
 
 // router.post("/UserProfile", function (req, res) {
 //   // console.l("In profile update");
@@ -151,28 +190,48 @@ router.post("/UserProfile", async (req, res) => {
 //     });
 // });
 
-router.get("/restaurant/:id", checkAuth, async(req,res)=>{
-const restaurantId = req.params.id;
-const restaurant = await Restaurant.findOne({RestaurantId:restaurantId});
-    res.status(200).send(restaurant);
-})
-
-
-
-
-router.get("/customer/:id",(req,resp)=>{
-    
-  const CustomerId = req.params.id;
-  let query = "SELECT * from Customer1 where CustomerId = ?";
-  con.query(query,[CustomerId],function(err,results, fields){
-      if(err){
-          resp.status(500).send({error:'Unknow internal server error'});
-      }else{
-        console.log(results)
-          resp.status(200).send(results);
-      }
-  });
+router.get("/restaurant/:id", async function (req, res) {
+  //const CustomerId = req.params.id;
+ kafka.make_request("GetRestaurantProfile", req.params, function(err, results) {
+     console.log("In result")
+     console.log("result in msg", results)
+     if(err){
+         console.log("err", err)
+         res.json({
+             status: "Error",
+             msg: "Error",
+         })
+         res.status(400).end();
+     } else
+     {
+         console.log("inside else", results)
+         res.status(200).send(results)
+     }
+ })
 });
+
+// router.get("/restaurant/:id", checkAuth, async(req,res)=>{
+// const restaurantId = req.params.id;
+// const restaurant = await Restaurant.findOne({RestaurantId:restaurantId});
+//     res.status(200).send(restaurant);
+// })
+
+
+
+
+// router.get("/customer/:id",(req,resp)=>{
+    
+//   const CustomerId = req.params.id;
+//   let query = "SELECT * from Customer1 where CustomerId = ?";
+//   con.query(query,[CustomerId],function(err,results, fields){
+//       if(err){
+//           resp.status(500).send({error:'Unknow internal server error'});
+//       }else{
+//         console.log(results)
+//           resp.status(200).send(results);
+//       }
+//   });
+// });
 
 // router.post("/restaurant/:id",async(req,resp)=>{
 //   restaurantId = req.params.id;
@@ -200,32 +259,51 @@ router.get("/customer/:id",(req,resp)=>{
 //       }
 //   });
 // });
+router.post("/restaurant/profile", async function (req, res) {
+  //const CustomerId = req.params.id;
+ kafka.make_request("GetRestaurantProfile", req.body, function(err, results) {
+     console.log("In result")
+     console.log("result in msg", results)
+     if(err){
+         console.log("err", err)
+         res.json({
+             status: "Error",
+             msg: "Error",
+         })
+         res.status(400).end();
+     } else
+     {
+         console.log("inside else", results)
+         res.status(200).send(results)
+     }
+ })
+});
 
-router.post("/restaurant/:id",async(req,res)=>{
-  const restaurantId = mongoose.Types.ObjectId(req.params.id);
-  let restaurant = await Restaurant.findOne({RestaurantId:restaurantId});
-  if (!restaurant) {
-      return res.status(400).send("Restaurant not found");
-  }
+// router.post("/restaurant/profile",async(req,res)=>{
+//   const restaurantId = mongoose.Types.ObjectId(req.params.id);
+//   let restaurant = await Restaurant.findOne({RestaurantId:restaurantId});
+//   if (!restaurant) {
+//       return res.status(400).send("Restaurant not found");
+//   }
 
-  payload = {
-      RestaurantName:req.body.name,
-      RestaurantDesc: req.body.desc ,
-      PhoneNumber:req.body.phone ,
-      DeliveryMode: req.body.mode,
-      Country: req.body.country,
-      State: req.body.state,
-      City: req.body.city,
-      PinCode: req.body.pincode,
-      Image: req.body.imageUrl,
-      WorkHrsFrom: req.body.fromHrs,
-      WorkHrsTo: req.body.toHrs
-  }
+//   payload = {
+//       RestaurantName:req.body.name,
+//       RestaurantDesc: req.body.desc ,
+//       PhoneNumber:req.body.phone ,
+//       DeliveryMode: req.body.mode,
+//       Country: req.body.country,
+//       State: req.body.state,
+//       City: req.body.city,
+//       PinCode: req.body.pincode,
+//       Image: req.body.imageUrl,
+//       WorkHrsFrom: req.body.fromHrs,
+//       WorkHrsTo: req.body.toHrs
+//   }
 
-  Restaurant.findOneAndUpdate({ RestaurantId: restaurantId }, payload,{returnNewDocument:true}, function (err, updateRestaurant) {
-      if (err) return res.send(500, { error: err });
-      return res.status(200).send(updateRestaurant);
-  });
-})
+//   Restaurant.findOneAndUpdate({ RestaurantId: restaurantId }, payload,{returnNewDocument:true}, function (err, updateRestaurant) {
+//       if (err) return res.send(500, { error: err });
+//       return res.status(200).send(updateRestaurant);
+//   });
+// })
 
 module.exports = router;

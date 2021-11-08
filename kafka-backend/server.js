@@ -1,7 +1,23 @@
 var connection =  new require('./kafka/Connection');
 //topics files
 //var signin = require('./services/signin.js');
-var Orders = require('./services/Orders');
+var Orders = require('./services/Orders/Orders');
+var RestOrders = require("./services/Orders/RestOrders")
+var ReceiptOrder = require("./services/Orders/ReceiptOrder")
+var DeliveryAddress = require("./services/DeliveryAddress/DeliveryAddress")
+var AddDishes = require("./services/Dishes/AddDishes")
+var GetDeliveryAddress = require("./services/DeliveryAddress/GetDeliveryAddress")
+var GetRestDishes = require("./services/Dishes/GetRestDishes")
+var GetDishes = require("./services/Dishes/GetDishes")
+var GetOneDish = require("./services/Dishes/GetOneDish")
+var GetAllDish = require("./services/Dishes/GetAllDish")
+var PostFav = require("./services/Favourites/PostFav")
+var GetFav = require("./services/Favourites/GetFav")
+var GetRestaurant = require("./services/Restaurant/GetRestaurant")
+var GetUser = require("./services/UserProfile/GetUser")
+var PostUser = require("./services/UserProfile/PostUser")
+var GetRestaurantProfile = require("./services/UserProfile/GetRestaurantProfile")
+var PostRestaurant = require("./services/UserProfile/PostRestaurant")
 const mongoose = require("mongoose")
 
 mongoose
@@ -51,3 +67,19 @@ function handleTopicRequest(topic_name,fname){
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest("Orders",Orders)
+handleTopicRequest("RestOrders", RestOrders)
+handleTopicRequest("ReceiptOrder",ReceiptOrder)
+handleTopicRequest("DeliveryAddress",DeliveryAddress)
+handleTopicRequest("AddDishes",AddDishes)
+handleTopicRequest("GetDeliveryAddress",GetDeliveryAddress)
+handleTopicRequest("GetRestDishes",GetRestDishes)
+handleTopicRequest("GetDishes",GetDishes)
+handleTopicRequest("GetOneDish",GetOneDish);
+handleTopicRequest("GetAllDish",GetAllDish);
+handleTopicRequest("PostFav",PostFav)
+handleTopicRequest("GetFav",GetFav)
+handleTopicRequest("GetRestaurant", GetRestaurant)
+handleTopicRequest("GetUser", GetUser)
+handleTopicRequest("PostUser", PostUser)
+handleTopicRequest("GetRestaurantProfile", GetRestaurantProfile)
+handleTopicRequest("PostRestaurant", PostRestaurant)
