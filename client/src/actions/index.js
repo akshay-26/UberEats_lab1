@@ -18,5 +18,13 @@ const logged = (username, useremail) => ({
     email: useremail
    
   });
-  export { signed, logout, logged as default };
+
+  const userData = (profile) => ({
+    type: 'Profie',
+    payload: profile
+   
+  });
+
+
+  export { userData, signed, logout, logged as default };
   

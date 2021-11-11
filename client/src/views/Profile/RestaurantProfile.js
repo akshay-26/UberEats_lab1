@@ -24,6 +24,9 @@ import { useSelector } from 'react-redux';
 import { Image } from 'react-bootstrap/esm';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { MenuItem } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import {userData} from '../../actions';
+
 
 
 const theme = createTheme();
@@ -109,10 +112,12 @@ export default function RestaurantProfile() {
             });
 
     };
+    const dispatch = useDispatch();
+   
     useEffect(async () => {
         const restaurantId = localStorage.getItem('RestaurantId');
         const response = await axios.get(`${backendServer}/restaurant/${restaurantId}`);
-
+        dispatch(userData(response.data))
         console.log(response)
         const restaurant = response.data;
         setName(restaurant.RestaurantName);

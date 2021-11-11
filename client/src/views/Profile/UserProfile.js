@@ -9,7 +9,8 @@ import avatar from '../../images/img_avatar2.png'
 import logo from '../../images/UberEATS.png'
 import backendServer from '../../Config'
 import { MenuItem } from '@mui/material';
-
+import { useDispatch } from 'react-redux';
+import {userData} from '../../actions';
 // const val = localStorage.getItem("currentUser")
 
 //console.log(val)
@@ -200,7 +201,7 @@ const UserProfile = () => {
       });
   }
 }
-
+const dispatch = useDispatch();
 
 
   useEffect(async () => {
@@ -209,7 +210,7 @@ const UserProfile = () => {
     console.log(val)
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     const response = await axios.get(`${backendServer}/UserProfile/User`, { params: { email: val } });
-
+    dispatch(userData(response.data))
     console.log("user profile", response.data.EmailId)
 
     if (val) {

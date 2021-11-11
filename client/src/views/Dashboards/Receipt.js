@@ -32,8 +32,10 @@ export default function Receipt(props) {
         setOrder(props.order.DeliveryAddress);
         console.log("order Res", props.order.DeliveryAddress)
         const response = await axios.get(`${backendServer}/orders/${props.order.OrderId}/items`)
-        //console.log(response.data)
-        setOrderDetails(response.data);
+        console.log("hello", response.data)
+        setOrderDetails(response.data.OrderDetails);
+        console.log("wassup", orderDetails.OrderDetails)
+
     }, []);
 
     const getTotalPrice = () => {
@@ -41,7 +43,7 @@ export default function Receipt(props) {
     }
 
     const getFinalPrice = () => {
-        let subtotal = getTotalPrice();
+        let subtotal = getTotalPrice().toFixed(2);
         let deliveryFee = (subtotal * 0.01).toFixed(2);
         let serviceFee = (subtotal * 0.02).toFixed(2);
         let tax = (subtotal * 0.09).toFixed(2);
@@ -52,7 +54,7 @@ export default function Receipt(props) {
         <>
             <List disablePadding>
                 {orderDetails.map((item) => (
-                    <ListItem key={item.DishId} sx={{ py: 1, px: 0 }}>
+                    <ListItem key={item._id} sx={{ py: 1, px: 0 }}>
                         <Grid container>
                             <ListItemText primary={item.DishName} secondary={item.DishDesc} />
                             <Grid item xs={12} sm={6}>
@@ -72,7 +74,7 @@ export default function Receipt(props) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="Sub Total" />
                     <Typography variant="subtitle1">
-                        ${getTotalPrice()}
+                        ${getTotalPrice().toFixed(2)}
                     </Typography>
                 </ListItem>
             </List>

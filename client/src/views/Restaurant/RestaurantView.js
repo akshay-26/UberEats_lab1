@@ -26,7 +26,7 @@ import { useHistory } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const theme = createTheme();
 
@@ -39,7 +39,8 @@ const styleimg = {
 
 const RestaurantView = () => {
   const history = useHistory();
-
+  const nickname = useSelector((state) => state.UserProfile.user.NickName);
+  console.log("redux data is here", nickname)
 
   if(!localStorage.getItem("CustomerID")){
     history.push("/LandingPage")

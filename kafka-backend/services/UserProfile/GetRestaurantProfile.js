@@ -10,7 +10,7 @@ async function handle_request(msg, callback){
     {
         const restaurantId = msg.id;
         const restaurant = await Restaurant.findOne({RestaurantId:restaurantId});
-        callabck(null,restaurant);
+        callback(null,restaurant);
     }
 }
 

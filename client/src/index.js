@@ -8,7 +8,12 @@ import App from './App'
 import  {Provider} from 'react-redux'
 import allReducer from './reducers/index'
 import {createStore, combineReducers} from 'redux'
-const store = createStore(allReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+import thunk from 'redux-thunk';
+import { applyMiddleware } from 'redux';
+//import { composeWithDevTools } from 'redux-devtools-extension';
+import persistedReducer from '../src/reducers';
+
+const store = createStore(persistedReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 
 

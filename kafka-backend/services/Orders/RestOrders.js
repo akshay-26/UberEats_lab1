@@ -46,7 +46,7 @@ else if(Object.keys(msg).length > 4){
     );
 
     let orderPayload = {
-        CustomerId: msg.CustomerId,
+        CustomerId: msg.customerId,
         RestaurantId: msg.restaurantId,
         OrderStatus: "Order Recieved",
         DeliveryType: msg.deliverytype,

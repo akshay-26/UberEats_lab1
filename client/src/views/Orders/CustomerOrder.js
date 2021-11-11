@@ -256,7 +256,7 @@ const [OrderId, setOrderId] = useState('')
 
   const CancelOrder = (card, cardId) => {
     console.log("card.OrderStatus", card.OrderStatus)
-    if (card.OrderStatus !=  "Order Received") {
+    if (card.OrderStatus ==  "Order Recieved") {
       setOrderId(cardId)
       console.log("cardId", cardId)
       setCancel(true)
