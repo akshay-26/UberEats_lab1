@@ -37,7 +37,7 @@ app.use(
 );
 //app.use("/",imagestore)
 var corsOptions = {
-    origin: "http://localhost:3000"
+    origin: "http://13.58.35.249:3000"
   };
 
   mongoose
