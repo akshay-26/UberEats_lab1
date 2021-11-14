@@ -47,7 +47,7 @@ var corsOptions = {
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
-    app.listen(3001, () => {
+    app.listen(3003, () => {
       console.log("DB and Server connected");
     });
   });
