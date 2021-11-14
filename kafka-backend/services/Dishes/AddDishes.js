@@ -29,7 +29,7 @@ async function handle_request(msg, callback){
     }
     if (!DishId) {
         console.log("inside if", payload)
-        payload.RestaurantId = RestaurantId;
+        payload.RestaurantId = msg.restaurantId;
         restaurant.Dishes.push(payload);
         let response = await restaurant.save();
         updatedRestaurant = response.toObject();

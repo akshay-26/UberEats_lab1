@@ -336,6 +336,7 @@ const Navbar = (props) => {
                 <MenuItem value="Preparing">Preparing</MenuItem>
                 <MenuItem value="Pick Up Ready">Pick Up Ready</MenuItem>
                 <MenuItem value="Picked Up">Picked Up</MenuItem>
+                <MenuItem value="Cancel Order">Cancel Order</MenuItem>
               </Select>
             </FormControl>
 
@@ -351,6 +352,7 @@ const Navbar = (props) => {
                 <MenuItem value="Preparing">Preparing</MenuItem>
                 <MenuItem value="On The Way">On The Way</MenuItem>
                 <MenuItem value="Delivered">Delivered</MenuItem>
+                <MenuItem value="Cancel Order">Cancel Order</MenuItem>
 
               </Select>
             </FormControl>)}

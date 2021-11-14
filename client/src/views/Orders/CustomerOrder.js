@@ -149,11 +149,13 @@ const [OrderId, setOrderId] = useState('')
     console.log("filter", event.target.value)
     if (event.target.value == "All Orders") {
 
-      console.log("else", event.target.value)
+      console.log("if", event.target.value)
+      console.log(value)
       setOrderResponse(value)
     }
     else if (event.target.value != '') {
-      let filter_1 = value.filter(res => res.RestaurantName != null && res.OrderStatus == event.target.value);
+      console.log("else", event.target.value)
+      let filter_1 = value.filter(res => res.RestaurantId != null && res.OrderStatus == event.target.value);
       console.log("orderFil", filter_1)
       setOrderResponse(filter_1);
 
@@ -256,7 +258,7 @@ const [OrderId, setOrderId] = useState('')
 
   const CancelOrder = (card, cardId) => {
     console.log("card.OrderStatus", card.OrderStatus)
-    if (card.OrderStatus ==  "Order Recieved") {
+    if (card.OrderStatus ==  "Order Received") {
       setOrderId(cardId)
       console.log("cardId", cardId)
       setCancel(true)
@@ -322,7 +324,7 @@ const [OrderId, setOrderId] = useState('')
             <>
               <ListItem key={card.OrderId} alignItems="flex-center" >
                 <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src={card.Image} />
+                  <Avatar alt="Remy Sharp" src={card.ImageUrl} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={card.RestaurantName}

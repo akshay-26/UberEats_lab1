@@ -74,15 +74,15 @@ export default function Review(props) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="Sub Total" />
                     <Typography variant="subtitle1">
-                        ${getTotalPrice()}
+                        ${getTotalPrice().toFixed(2)}
                     </Typography>
                 </ListItem>
             </List>
             <Grid container spacing={2}>
                 <Grid visibility={getAddressVisibility()} item xs={12} sm={6}>
-                    <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                    {/* <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                         Payment Due: ${getFinalPrice()}
-                    </Typography>
+                    </Typography> */}
                     <Typography variant="h7" gutterBottom sx={{ mt: 2 }}>
                         Delivery Address
                     </Typography>
@@ -106,19 +106,19 @@ export default function Review(props) {
                                 <Typography gutterBottom>Delivery fee</Typography>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography gutterBottom>${(getTotalPrice() * 0.01).toFixed(2)}</Typography>
+                                <Typography gutterBottom>${(getTotalPrice() * 0.04).toFixed(2)}</Typography>
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography gutterBottom>Service fee</Typography>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography gutterBottom>${(getTotalPrice() * 0.02).toFixed(2)}</Typography>
+                                <Typography gutterBottom>${(getTotalPrice() * 0.015).toFixed(2)}</Typography>
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography gutterBottom>Tax</Typography>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography gutterBottom>${(getTotalPrice() * 0.09).toFixed(2)}</Typography>
+                                <Typography gutterBottom>${(getTotalPrice() * 0.035).toFixed(2)}</Typography>
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography gutterBottom>Total</Typography>

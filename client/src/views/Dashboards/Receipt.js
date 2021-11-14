@@ -27,14 +27,16 @@ export default function Receipt(props) {
     const [order, setOrder] = useState({});
     const [orderDetails, setOrderDetails] = useState([]);
     const [mode, setMode] = useState('');
+    const [addressdetails, setAddressDetails] = useState('')
 
     useEffect(async () => {
-        setOrder(props.order.DeliveryAddress);
-        console.log("order Res", props.order.DeliveryAddress)
+        setOrder(props.order.DeliveryAddress[0]);
+        console.log("order Res", props.order.DeliveryAddress[0])
         const response = await axios.get(`${backendServer}/orders/${props.order.OrderId}/items`)
         console.log("hello", response.data)
         setOrderDetails(response.data.OrderDetails);
-        console.log("wassup", orderDetails.OrderDetails)
+        setAddressDetails(response.data);
+        console.log("wassup", addressdetails.Instructions)
 
     }, []);
 
@@ -87,10 +89,10 @@ export default function Receipt(props) {
                     <Typography gutterBottom>{order.AddressLine2}</Typography>
                     <Typography gutterBottom>{order.City},{order.State},{order.PinCode}</Typography>
                     <h5>Special Instructions</h5>
-                    {order.Instructions == '' ?(
+                    {addressdetails.Instructions == '' ?(
                         <Typography gutterBottom>{"No Special Request"}</Typography> 
                     ): (
-                        <Typography gutterBottom>{order.Instructions}</Typography>)}
+                        <Typography gutterBottom>{addressdetails.Instructions}</Typography>)}
                     
                 </Grid>
                   

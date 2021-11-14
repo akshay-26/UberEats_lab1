@@ -217,7 +217,14 @@ router.get("/restaurant/:id", async function (req, res) {
 // })
 
 
-
+router.get("/customer/:id", async (req,res)=>{
+    
+    const CustomerId = req.params.id;
+   // const restaurantId = msg.id;
+    const customer = await Customer.findOne({CustomerId:CustomerId});
+    res.status(200).send(customer);
+  });
+  
 
 // router.get("/customer/:id",(req,resp)=>{
     
@@ -261,7 +268,7 @@ router.get("/restaurant/:id", async function (req, res) {
 // });
 router.post("/restaurant/profile", async function (req, res) {
   //const CustomerId = req.params.id;
- kafka.make_request("GetRestaurantProfile", req.body, function(err, results) {
+ kafka.make_request("PostRestaurant", req.body, function(err, results) {
      console.log("In result")
      console.log("result in msg", results)
      if(err){

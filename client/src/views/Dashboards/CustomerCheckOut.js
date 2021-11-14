@@ -77,10 +77,12 @@ if(!localStorage.getItem("CustomerID")){
         let TotalAmt = sessionStorage.getItem("TotalAmt")
         console.log("instructions", name)
         console.log("total amount", TotalAmt)
-        
+        const username = localStorage.getItem("username");
+        const userImage = localStorage.getItem("userImage")
+        const curRestName = sessionStorage.getItem("CurrRestName")
         let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
         axios.post(`${backendServer}/orders/customer`,
-         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name})
+         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name, CustomerName:username, RestaurantName: curRestName, ImageUrl:userImage})
             .then(response => {
                 console.log("post order", response.data)
                 setPostedOrder(response.data);

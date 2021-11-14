@@ -70,7 +70,7 @@ export default function CustomerDashBoard() {
   const [filterType, setFilterType] = useState('All');
 
   const [filterCategory, setFilterCategory] = useState('All');
-
+  const [defaultimage, setDefaultImg] = useState('')
   const CurrRestaurantDetails = JSON.parse(sessionStorage.getItem('currentRestaurantDetails'))
   console.log("sesson Value", CurrRestaurantDetails)
 
@@ -90,6 +90,7 @@ export default function CustomerDashBoard() {
     //getGroups(response.data);
     setCards(response.data);
     setInitialLoad(response.data);
+    setDefaultImg(response.data[0].DishImage)
     //setselectGroups(array);
     let currentCart = JSON.parse(sessionStorage.getItem('currentCart')) || [];
     setCart(currentCart);
@@ -135,15 +136,16 @@ export default function CustomerDashBoard() {
 
   const onRemoveFromCart = (dish) => {
     let newCart = [...cart]
-    let index = newCart.findIndex(item => item.DishId === dish._id)
+    let index = newCart.findIndex(item => item._id === dish._id)
     if (index == -1)
       return;
     newCart[index].Quantity > 1 ? newCart[index].Quantity-- : newCart.splice(index, 1);
+    console.log(newCart.length)
     if (newCart.length == 0)
       setOpenCart(false);
     setCart(newCart)
     persistCartOnSession(newCart);
-    console.log("cart", newCart);
+    console.log("cart after removing", newCart);
   }
 
   const onSearch = (type, searchTerm) => {
@@ -184,7 +186,22 @@ export default function CustomerDashBoard() {
   const vieworders = () =>{
     history.push("/CustomerOrder")
   }
-
+  const styles = 
+  {
+  
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9,
+    marginTop:'30',
+   
+      display: 'block',
+      margin: 'auto',
+     // height: '50',
+      width: '25'}
+    
+  // }
+ 
+    };
   return (
     <>
       <NavbarCustomer onSearch={onSearch} view='customerrestaurant' />
@@ -200,7 +217,7 @@ export default function CustomerDashBoard() {
             }}
           >
             <Container maxWidth="sm">
-              <Typography
+              {/* <Typography
                 component="h1"
                 variant="h2"
                 align="center"
@@ -208,10 +225,26 @@ export default function CustomerDashBoard() {
                 gutterBottom
               >
                 Hi
-              </Typography>
-              <Typography variant="h5" align="center" color="text.secondary" paragraph>
-                You deserve the best food in the city
-              </Typography>
+              </Typography> */}
+              {/* <Typography variant="h5" align="center" color="text.secondary" paragraph>
+                Scroll Through Your Favourite Restaurant
+              </Typography> */}
+              <Card
+                    sx={{ height: '70%', width:'100%' , display: 'flex', flexDirection: 'row' }}
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        // 16:9
+                        pt: '00.25%',
+                      }}
+                      image={defaultimage}
+                      alt="random"
+                      style={styles}
+                    />
+                    {/* <h3>"rest"</h3> */}
+                    </Card>
+                    <br></br>
               <Box textAlign='center'>
                 <Button variant='contained' onClick={vieworders}>
                   View Orders
@@ -267,6 +300,7 @@ export default function CustomerDashBoard() {
                         pt: '00.25%',
                       }}
                       image={card.DishImage}
+                      style= {styles}
                       alt="random"
                     />
                     <CardContent sx={{ flexGrow: 1 }}>

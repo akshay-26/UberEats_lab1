@@ -30,12 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const theme = createTheme();
 
-const styleimg = {
-  display: 'block',
-  margin: 'auto',
-  height: '50',
-  width: '25'
-}
+
 
 const RestaurantView = () => {
   const history = useHistory();
@@ -139,10 +134,26 @@ const RestaurantView = () => {
 
   const onView = (card) =>{
     sessionStorage.setItem('currentRestaurant', card.RestaurantId);
+    sessionStorage.setItem("CurrRestName", card.RestaurantName)
     sessionStorage.setItem('currentRestaurantDetails', JSON.stringify(card));
     history.push("/CustomerDashboard");
   }
-
+  const styles = 
+  {
+  
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9,
+    marginTop:'30',
+   
+      display: 'block',
+      margin: 'auto',
+      height: '50',
+      width: '25'
+    
+  }
+    };
+    
   return (
     <div>
       <NavbarCustomer onSearch={onSearch} view='customerdashboard' />
@@ -202,7 +213,7 @@ const RestaurantView = () => {
                       pt: '00.25%',
                     }}
                     image={card.Image}
-                    alt="random" style={styleimg}
+                    alt="random" style={styles}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">

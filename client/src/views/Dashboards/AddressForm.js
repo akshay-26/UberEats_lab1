@@ -43,7 +43,7 @@ export default function AddressForm(props) {
     const [newAddressSelection, setAddressSelection] = useState(false);
 
     const onAddressSelect = (event) => {
-        let addr = address.filter(addr=>addr.SavaAsName==event.target.value)[0];
+        let addr = address.filter(addr=>addr.AddressName === event.target.value)[0];
         setAddr1(addr.AddressLine1);
         setAddr2(addr.AddressLine2);
         setCity(addr.City);
@@ -54,7 +54,7 @@ export default function AddressForm(props) {
         sessionStorage.setItem('deliveryAddress',JSON.stringify({...addr,...{selectedAddress:event.target.value}}));
         props.onAddressSelect(addr);
         if(event.target.value != "None"){
-            setAddressName(addr.SavaAsName);
+            setAddressName(addr.AddressName);
             setSelectedAddress(addr.AddressName);
             setAddressSelection(true);
         }else{
@@ -114,8 +114,8 @@ export default function AddressForm(props) {
                         variant="standard"
                     >
                         {address.map((addr) => (
-                            <MenuItem key={addr.AddressId} value={addr.SavaAsName}>
-                                {addr.SavaAsName}
+                            <MenuItem key={addr._id} value={addr.AddressName}>
+                                {addr.AddressName}
                             </MenuItem>
                         ))}
                     </TextField>

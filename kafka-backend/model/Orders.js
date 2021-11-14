@@ -16,6 +16,9 @@ const Address = new Schema({
 const ordersSchema = new Schema({
         OrderId: { type: mongoose.Schema.Types.ObjectId, auto: true },
         CustomerId: { type: String, required: true },
+        CustomerName: { type: String },
+        RestaurantName:{type: String},
+        ImageUrl: { type: String },
         RestaurantId: { type: String, required: true },
         OrderStatus: { type: String, required: true },
         DeliveryType: { type: String, required: true },

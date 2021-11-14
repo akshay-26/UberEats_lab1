@@ -163,6 +163,8 @@ const UserProfile = () => {
       setImageUrl(url1);
     }
 
+   
+    const userimage = localStorage.setItem("userImage", url1);
 
     var CustomerId =  localStorage.getItem("CustomerID")
     console.log("country", imageUrl)
@@ -212,7 +214,7 @@ const dispatch = useDispatch();
     const response = await axios.get(`${backendServer}/UserProfile/User`, { params: { email: val } });
     dispatch(userData(response.data))
     console.log("user profile", response.data.EmailId)
-
+    const username = localStorage.setItem("username", response.data.CustomerName);
     if (val) {
       setEmail(response.data.EmailId);
       setFullname(response.data.CustomerName);
@@ -283,7 +285,7 @@ const dispatch = useDispatch();
                       />
                     </div>
                     <br></br>
-                    <h6 class="user-name" style={{ color: 'blue' }}>Welcome {fullname}</h6>
+                    <h6 class="user-name" style={{ color: 'blue' }}>Welcome {nickname}</h6>
                     {/* <h6 class="user-email"> {email}</h6> */}
                   </div>
                   <div class="about">

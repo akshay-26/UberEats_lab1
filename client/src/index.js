@@ -13,7 +13,7 @@ import { applyMiddleware } from 'redux';
 //import { composeWithDevTools } from 'redux-devtools-extension';
 import persistedReducer from '../src/reducers';
 
-const store = createStore(persistedReducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const store = createStore(allReducer ,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 
 

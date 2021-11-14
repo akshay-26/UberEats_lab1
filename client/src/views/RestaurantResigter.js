@@ -25,7 +25,7 @@ const RestaurantRegister = () => {
 
 
     const Register = () => {
-        axios.post(`${backendServer}/RegisterUser/Restaurant1`,
+        axios.post(`${backendServer}/RegisterUser/Restaurant`,
             { RestaurantName: RestaurantName, useremail: email, userpassword: password }
         ).then((response) => {
             console.log("Restaurant Resgister", response)
@@ -35,7 +35,7 @@ const RestaurantRegister = () => {
             let decodedToken = jwt_decode(tokenArray[1]);
             console.log("decodedToken", decodedToken)
             // eslint-disable-next-line no-underscore-dangle
-            localStorage.setItem('RestaurantId', decodedToken.RestaurantId);
+            localStorage.setItem('RestaurantId', decodedToken._id);
             //console.log(token);
             localStorage.setItem('RestaurantEmail', decodedToken.RestaurantEmail);
             localStorage.setItem('RestaurantName', decodedToken.RestaurantName);

@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const Order = require("../model/Orders")
 const kafka = require("../kafka/client")
 const mongoose = require("mongoose");
-
+const Customer = require("../model/CustomerDetails")
 
 router.get("/Orders/:id", async function (req, res) {
     const CustomerId = req.params.id;
@@ -58,6 +58,26 @@ router.get("/Orders/:id", async function (req, res) {
 router.get("/restaurant/Orders/:id", async function (req, res) {
     const RestaurantId = req.params.id;
     const orders = await Order.find({RestaurantId:RestaurantId});
+    const customer = await Customer.find({CustomerId:orders.CustomerId});
+    //const result = 
+    // var response = Order.aggregate([ { "$match": { "CustomerId": customer.CustomerId } },
+    // { "$unwind": "$Customer" },
+    // { "$match": { "Customer.CustomerId": orders.CustomerId } },{
+    //     $lookup:{
+    //         from: "Customer",
+    //         localField:"CustomerId",
+    //         foreignField:"CustomerId",
+    //         as:"orderRes"
+    //     }
+    // }],function( err, data ) {
+
+    //     if ( err )
+    //       throw err;
+    
+    //     //console.log( JSON.stringify( data ));
+    //     
+    //   })
+    // console.log(orderRes)
     res.status(200).send(orders);
 });
 

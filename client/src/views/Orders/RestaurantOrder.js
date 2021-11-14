@@ -134,7 +134,7 @@ const RestaurantOrder = () => {
     history.push("/RestaurantLogin")
   }
     const [OrderResponse, setOrderResponse] = useState([]);
-
+    const [customerDet, setCustomerDet] = useState([]);
     const [searchValue, setSearch] = useState('');
     const [filteredPosts, setFilteredPosts] = useState([]);
 
@@ -175,15 +175,18 @@ const RestaurantOrder = () => {
 
         const response = await axios.get(`${backendServer}/restaurant/Orders/${RestaurantId}`)
 
-        console.log("restaurant orders", response.data)
+        //console.log("restaurant orders",response.data['orders'].slice(1,2))
 
         setOrderResponse(response.data)
+        setCustomerDet(response.data.customer)
         setValue(response.data)
         
         //const data1 = OrderResponse[0].DeliveryType; 
     }, [])
-
-
+   
+    
+    console.log("this works",customerDet)
+    
     // pop up code
 
     const [open, setOpen] = React.useState(false);
@@ -301,7 +304,7 @@ const RestaurantOrder = () => {
             <StyledTableCell>Customer Name</StyledTableCell>
             <StyledTableCell align="center">Customer Details</StyledTableCell>
             <StyledTableCell align="center">Last Updated Time</StyledTableCell>
-            <StyledTableCell align="center">Total Amount</StyledTableCell>
+            <StyledTableCell align="center">Order Type</StyledTableCell>
             <StyledTableCell align="center">Order Status</StyledTableCell>
             <StyledTableCell align="center">Edit Order Status</StyledTableCell>
           </TableRow>
@@ -316,11 +319,11 @@ const RestaurantOrder = () => {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-              <Avatar align="center" alt="Remy Sharp" src={row.image} ></Avatar>{row.CustomerName}
+              <Avatar align="center" alt="Remy Sharp" src={row.ImageUrl} ></Avatar>{row.CustomerName}
               </TableCell>
               <TableCell align="center"><Button onClick={() => viewCustomer(row.CustomerId)}>View</Button></TableCell>
               <TableCell align="center">{row.LastUpdatedTime}</TableCell>
-              <TableCell align="center">{row.TotalAmount}</TableCell>
+              <TableCell align="center">{row.DeliveryType}</TableCell>
               <TableCell align="center">{row.OrderStatus}</TableCell>
               <TableCell align="center"> 
               <Button onClick={handleClickOpen(row.OrderId)}>Edit Order</Button>

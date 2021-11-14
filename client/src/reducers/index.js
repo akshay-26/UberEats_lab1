@@ -14,8 +14,8 @@ const persistConfig = {
     storage,
   };
   
-  const persistedReducer = persistReducer(persistConfig, allReducers);
+  //const persistedReducer = persistReducer(persistConfig, allReducers);
   
-  export default persistedReducer;
+  //export default persistedReducer;
 
-// export default allReducers;
+export default allReducers;

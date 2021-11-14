@@ -81,7 +81,7 @@ function RestaurantDashboard() {
     const response = await axios.get(`${backendServer}/Restaurant/dishes/${restaurantId}`);
 
     setCards(response.data);
-    console.log("Hello cards", cards)
+    console.log("Hello cards", response.data)
 
     //  setRes1(response.data);
     setCardSearch(response.data);

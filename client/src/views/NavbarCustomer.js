@@ -317,7 +317,7 @@ const Navbar = (props) => {
 
   const onRemoveFromCart = (dish) => {
     let newCart = [...cart]
-    let index = newCart.findIndex(item => item.DishId === dish.DishId)
+    let index = newCart.findIndex(item => item._id === dish._id)
     if (index == -1)
       return;
     newCart[index].Quantity > 1 ? newCart[index].Quantity-- : newCart.splice(index, 1);
@@ -562,6 +562,8 @@ const Navbar = (props) => {
                     <MenuItem value="Preparing">Preparing</MenuItem>
                     <MenuItem value="Pick Up Ready">Pick Up Ready</MenuItem>
                     <MenuItem value="Picked Up">Picked Up</MenuItem>
+                    <MenuItem value="Cancel Order">Cancel Order</MenuItem>
+
                   </Select>
                 </FormControl>
 
@@ -577,7 +579,7 @@ const Navbar = (props) => {
                     <MenuItem value="Preparing">Preparing</MenuItem>
                     <MenuItem value="On The Way">On The Way</MenuItem>
                     <MenuItem value="Delivered">Delivered</MenuItem>
-
+                    <MenuItem value="Cancel Order">Cancel Order</MenuItem>
                   </Select>
                 </FormControl>)
               }
@@ -688,7 +690,7 @@ const Navbar = (props) => {
           <DialogTitle id="form-dialog-title">Order Summary</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Here's what your cart looks like
+              <b>COUPON:</b> SHIM50 For 50% Off On Total Order
             </DialogContentText>
             <List disablePadding>
               {cart.map((item) => (
@@ -709,7 +711,7 @@ const Navbar = (props) => {
               <ListItem sx={{ py: 1, px: 0 }}>
                 <ListItemText primary="Total" />
                 <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  ${getTotalPrice()}
+                  ${getTotalPrice().toFixed(2)}
                 </Typography>
               </ListItem>
               <ListItem sx={{ py: 1, px: 0 }}>

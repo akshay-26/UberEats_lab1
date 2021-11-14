@@ -25,7 +25,7 @@ const RegisterUser = () =>{
     const [alert, setAlert] = useState('');
   
     const Register =()=> {
-          axios.post(`${backendServer }/RegisterUser1`, 
+          axios.post(`${backendServer }/RegisterUser`, 
         {username: username, useremail:email, userpassword: password }
         ).then((response)=>{
             console.log(response)
@@ -35,7 +35,7 @@ const RegisterUser = () =>{
           let decodedToken = jwt_decode(tokenArray[1]);
           console.log("decodedToken", decodedToken)
           // eslint-disable-next-line no-underscore-dangle
-          localStorage.setItem('CustomerId', decodedToken.CustomerId);
+          localStorage.setItem('CustomerId', decodedToken._id);
           //console.log(token);
           localStorage.setItem('EmailId', decodedToken.EmailId);
           localStorage.setItem('CustomerName', decodedToken.CustomerName);
