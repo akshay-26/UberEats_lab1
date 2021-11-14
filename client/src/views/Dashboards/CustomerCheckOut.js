@@ -197,9 +197,9 @@ if(!localStorage.getItem("CustomerID")){
         setAddr2(addr.AddressLine2);
         setCountry(addr.Country);
         setCity(addr.City);
-        setPincode(addr.PinCode);
+        setPincode(addr.Pincode);
         setState(addr.State);
-        setAddressName(addr.SavaAsName);
+        setAddressName(addr.AddressName);
     }
 
     const getStepContent = (step) => {

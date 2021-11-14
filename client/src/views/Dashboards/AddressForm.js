@@ -49,7 +49,7 @@ export default function AddressForm(props) {
         setCity(addr.City);
         setCountry(addr.Country);
         setState(addr.State);
-        setPincode(addr.PinCode);
+        setPincode(addr.Pincode);
         setSelectedAddress(event.target.value);
         sessionStorage.setItem('deliveryAddress',JSON.stringify({...addr,...{selectedAddress:event.target.value}}));
         props.onAddressSelect(addr);
@@ -79,7 +79,7 @@ export default function AddressForm(props) {
             setCity(addr.City);
             setCountry(addr.Country);
             setState(addr.State);
-            setPincode(addr.PinCode);
+            setPincode(addr.Pincode);
             setAddressName(addr.AddressName);
             setChecked(addr.Save);
             //setSelectedAddress(addr.SavaAsName);
