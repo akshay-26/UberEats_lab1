@@ -293,7 +293,7 @@ const Navbar = (props) => {
   }
 
   const onAddToCart = (dish) => {
-    if (cart.length != 0 && dish.RestaurantId != cart[0].RestaurantId) {
+    if (cart.length !== 0 && dish.RestaurantId !== cart[0].RestaurantId) {
       setCurrentRestaurant(cart[0].RestaurantId);
       setNewRestaurant(dish.RestaurantId);
       console.log("Curr res", currentRestaurant)
@@ -303,7 +303,7 @@ const Navbar = (props) => {
     }
     let newCart = [...cart, dish];
     console.log("new cart", newCart)
-    let index = cart.findIndex(item => item.DishId === dish.DishId);
+    let index = cart.findIndex(item => item._id === dish._id);
     if (index == -1) {
       newCart = [...cart, { ...dish, Quantity: 1 }]
     } else {

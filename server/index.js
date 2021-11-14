@@ -37,7 +37,7 @@ app.use(
 );
 //app.use("/",imagestore)
 var corsOptions = {
-    origin: "http://13.58.35.249:3000"
+    origin: "http://localhost:3000"
   };
 
   mongoose
@@ -47,7 +47,7 @@ var corsOptions = {
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
-    app.listen(3003, () => {
+    app.listen(3001, () => {
       console.log("DB and Server connected");
     });
   });

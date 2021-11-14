@@ -122,7 +122,7 @@ export default function CustomerDashBoard() {
       return;
     }
     let newCart = [...cart, dish];
-    let index = cart.findIndex(item => item.DishId === dish._id);
+    let index = cart.findIndex(item => item._id === dish._id);
     if (index == -1) {
       newCart = [...cart, { ...dish, Quantity: 1 }]
     } else {
