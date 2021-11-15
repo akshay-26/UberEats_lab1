@@ -10,15 +10,32 @@ const { auth } = require("../utils/passport");
 // const secret = "hello";
 auth();
 const saltRounds = 10;
+const kafka = require("../kafka/client")
+
+router.post("/LandingPage",  async function (req, res) {
+    //const CustomerId = req.params.id;
+   kafka.make_request("LandingPage", req.body, function(err, results) {
+       console.log("In result")
+       console.log("result in msg", results)
+       if(err){
+           console.log("err", err)
+           res.json({
+               status: "Error",
+               msg: "Error",
+           })
+           res.status(400).end();
+       } else
+       {
+           console.log("inside else", results)
+           res.status(200).send(results)
+       }
+   })
+});
 
 router.post("/LandingPage", async (req, res) =>{
     const usermail = req.body.useremail;
     const userpassword = req.body.userpassword;
 
-    // const customer = new Customer ({
-    //     EmailId: req.body.useremail,
-    //     CustomerPassword: req.body.userpassword
-    // })
     try{
         const user = await Customer.findOne({EmailId: req.body.useremail});
         if(!user){
@@ -115,6 +132,26 @@ router.post("/LandingPage", async (req, res) =>{
 
 
     // })
+
+    router.post("/RestaurantUser",  async function (req, res) {
+        //const CustomerId = req.params.id;
+       kafka.make_request("RestaurantUser", req.body, function(err, results) {
+           console.log("In result")
+           console.log("result in msg", results)
+           if(err){
+               console.log("err", err)
+               res.json({
+                   status: "Error",
+                   msg: "Error",
+               })
+               res.status(400).end();
+           } else
+           {
+               console.log("inside else", results)
+               res.status(200).send(results)
+           }
+       })
+    });
 
     router.post("/RestaurantUser", async (req, res) =>{
         const usermail = req.body.useremail;
