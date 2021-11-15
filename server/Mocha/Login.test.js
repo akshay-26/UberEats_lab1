@@ -13,7 +13,7 @@ describe("UberEats", function () {
     it("should return 'Invalid Credentails' when the username and password combination is incorrect", () => {
       agent
         .post("/uber-eats/api/LandingPage")
-        .send({ useremail: "akshay01@gmail.com", userpassword: "admin1234" })
+        .send({ useremail: "akshay@gmail.com", userpassword: "akshay123" })
         .then(function (res) {
           expect(res.text).to.include("Invalid Credentials");
         })
@@ -27,9 +27,9 @@ describe("UberEats", function () {
     it("should return user details when the username and password are correct", () => {
       agent
         .post("/uber-eats/api/LandingPage")
-        .send({ useremail: "akshay01@gmail.com", userpassword: "admin" })
+        .send({ useremail: "akshay@gmail.com", userpassword: "akshay" })
         .then(function (res) {
-          expect(res.text).to.include('akshay01@gmail.com');
+          expect(res.text).to.include('akshay@gmail.com');
         })
         .catch((error) => {
           console.log(error);
@@ -42,7 +42,7 @@ describe("UberEats", function () {
     it("should return 'Invalid Credentails' when the Restaurant email and password combination is incorrect", () => {
       agent
         .post("/uber-eats/api/RestaurantUser")
-        .send({ useremail: "bake@gmail.com", userpassword: "password" })
+        .send({ useremail: "jack@gmail.com", userpassword: "jack123" })
         .then(function (res) {
           expect(res.text).to.include("Invalid Credentials");
         })
@@ -55,9 +55,9 @@ describe("UberEats", function () {
     it("should return Restaurant Email details when the Restaurant email and password are correct", () => {
         agent
           .post("/uber-eats/api/RestaurantUser")
-          .send({ useremail: "bake@gmail.com", userpassword: "admin" })
+          .send({ useremail: "jack@gmail.com", userpassword: "jack" })
           .then(function (res) {
-            expect(res.text).to.include('bake@gmail.com');
+            expect(res.text).to.include('jack@gmail.com');
           })
           .catch((error) => {
             console.log(error);
@@ -71,9 +71,9 @@ describe("UberEats", function () {
           agent
             .post("/uber-eats/api/RegisterUser")
             .send({
-              email: "akshay01@gmail.com",
-              password: "admin",
-              fullname: "Akshay",
+              email: "user1@gmail.com",
+              password: "user1",
+              fullname: "user1",
             })
             .then(function (res) {
               expect(res.text).to.equal("Email Id is already registered");
@@ -87,12 +87,12 @@ describe("UberEats", function () {
           agent
             .post("/uber-eats/api/RegisterUser")
             .send({
-              email: "dhanushTest1@gmail.com",
-              password: "password",
-              fullname: "Dhanush B",
+              email: "usertest@gmail.com",
+              password: "usertest",
+              fullname: "user test",
             })
             .then(function (res) {
-              expect(res.text).to.include('dhanushTest1@gmail.com');
+              expect(res.text).to.include('usertest@gmail.com');
             })
             .catch((error) => {
               console.log(error);
@@ -106,9 +106,9 @@ describe("UberEats", function () {
           agent
             .post("/uber-eats/api/RegisterUser")
             .send({
-              email: "glens@gmail.com",
-              password: "password",
-              fullname: "glens 123",
+              email: "popeyes@gmail.com",
+              password: "popeyes",
+              fullname: "popeyes",
             })
             .then(function (res) {
               expect(res.text).to.include("Email Id is already registered");

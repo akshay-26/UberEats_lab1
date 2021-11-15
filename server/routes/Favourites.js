@@ -8,8 +8,9 @@ const Customer = require("../model/CustomerDetails")
 const Restaurant = require("../model/RestaurantDetails")
 const mongoose = require('mongoose');
 const kafka = require("../kafka/client")
+const { checkAuth } = require("../utils/passport");
 
-router.post("/favourites/:id1/:id2", async function (req, res) {
+router.post("/favourites/:id1/:id2", checkAuth,  async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("PostFav", req.params, function(err, results) {
        console.log("In result")
@@ -64,7 +65,7 @@ router.post("/favourites/:id1/:id2", async function (req, res) {
 
 // })
 
-router.get("/favourites/:id", async function (req, res) {
+router.get("/favourites/:id",checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("GetFav", req.params, function(err, results) {
        console.log("In result")

@@ -10,7 +10,8 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import backendServer from '../../Config';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
-
+import { useDispatch } from 'react-redux';
+import { UserAddress } from '../../actions';
 export default function AddressForm(props) {
 
 //     const history = useHistory();
@@ -63,9 +64,13 @@ export default function AddressForm(props) {
         } 
         props.onAddressChange(event);
     }
+
+    const dispatch = useDispatch();
+    
     useEffect(async () => {
         let customerId = localStorage.getItem('CustomerID');
         let savedAddress = await axios.get(`${backendServer}/deliveryAddress/customer/${customerId}`);
+        dispatch(UserAddress(savedAddress))
         console.log(savedAddress)
         if (savedAddress.data.length != 0){
             let newAddr = [...address,...savedAddress.data];

@@ -7,8 +7,9 @@ const Order = require("../model/Orders")
 const kafka = require("../kafka/client")
 const mongoose = require("mongoose");
 const Customer = require("../model/CustomerDetails")
+const { checkAuth } = require("../utils/passport");
 
-router.get("/Orders/:id", async function (req, res) {
+router.get("/Orders/:id", checkAuth, async function (req, res) {
     const CustomerId = req.params.id;
    kafka.make_request("Orders", req.params, function(err, results) {
        console.log("In result")
@@ -55,7 +56,7 @@ router.get("/Orders/:id", async function (req, res) {
 // mongo
 
 
-router.get("/restaurant/Orders/:id", async function (req, res) {
+router.get("/restaurant/Orders/:id", checkAuth, async function (req, res) {
     const RestaurantId = req.params.id;
     const orders = await Order.find({RestaurantId:RestaurantId});
     const customer = await Customer.find({CustomerId:orders.CustomerId});
@@ -86,7 +87,7 @@ router.get("/restaurant/Orders/:id", async function (req, res) {
 
 
 // mongo /restaurant/Orders/:id1/:id2
-router.post("/restaurant/Orders/:id1/:id2", async function (req, res) {
+router.post("/restaurant/Orders/:id1/:id2", checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("RestOrders", req.params, function(err, results) {
        console.log("In result")
@@ -127,7 +128,7 @@ router.post("/restaurant/Orders/:id1/:id2", async function (req, res) {
 
 // mongo cancel order
 
-router.post("/restaurant/CancelOrders/:id1", async function (req, res) {
+router.post("/restaurant/CancelOrders/:id1",checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("RestOrders", req.params, function(err, results) {
        console.log("In result")
@@ -164,7 +165,7 @@ router.post("/restaurant/CancelOrders/:id1", async function (req, res) {
 
 
 // mongo
-router.post("/orders/customer", async function (req, res) {
+router.post("/orders/customer", checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("RestOrders", req.body  , function(err, results) {
        console.log("In result")
@@ -236,7 +237,7 @@ router.post("/orders/customer", async function (req, res) {
 
 // mongo customer order might not work
 
-router.get("/orders/customer/:id", async function (req, res) {
+router.get("/orders/customer/:id",checkAuth, async function (req, res) {
     const customerId = req.params.id;
     const order = await Order.findOne({CustomerId:customerId});
     res.status(200).send(order);
@@ -257,7 +258,7 @@ router.get("/orders/customer/:id", async function (req, res) {
 
 // mongo receipt orders
 
-router.get("/orders/:id/items", async function (req, res) {
+router.get("/orders/:id/items", checkAuth,async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("ReceiptOrder", req.params, function(err, results) {
        console.log("In result")

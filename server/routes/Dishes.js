@@ -7,13 +7,13 @@ const Restaurant = require("../model/RestaurantDetails")
 const mongoose = require('mongoose');
 const kafka = require("../kafka/client")
 // mongo
-
+const { checkAuth } = require("../utils/passport");
 // router.get("/Restaurant/dishes/:id", async function (req, res) {
 //     const restaurantId = req.params.id;
 //     let restaurant = await Restaurant.findOne({ RestaurantId: req.params.id });
 //     res.status(200).send(restaurant.Dishes);
 // });
-router.get("/Restaurant/dishes/:id", async function (req, res) {
+router.get("/Restaurant/dishes/:id", checkAuth, async function (req, res) {
    
     kafka.make_request("GetRestDishes", req.params, function(err, results) {
         console.log("In result")
@@ -38,7 +38,7 @@ router.get("/Restaurant/dishes/:id", async function (req, res) {
 
 
 // mongo
-router.post("/restaurant/Add/dishes", async function (req, res) {
+router.post("/restaurant/Add/dishes", checkAuth, async function (req, res) {
    
    kafka.make_request("AddDishes", req.body, function(err, results) {
        console.log("In result")
@@ -120,7 +120,7 @@ router.post("/restaurant/Add/dishes", async function (req, res) {
 
 // });
 
-router.get("/dishes/:id", async function (req, res) {
+router.get("/dishes/:id",checkAuth, async function (req, res) {
    
     kafka.make_request("GetDishes", req.params, function(err, results) {
         console.log("In result")
@@ -148,7 +148,7 @@ router.get("/dishes/:id", async function (req, res) {
 
 // mongo
 
-router.get("/dishes/:id/:id1", async function (req, res) {
+router.get("/dishes/:id/:id1", checkAuth, async function (req, res) {
    
     kafka.make_request("GetOneDish", req.params, function(err, results) {
         console.log("In result")
@@ -183,7 +183,7 @@ router.get("/dishes/:id/:id1", async function (req, res) {
 
 // mongo
 
-router.get("/Alldishes", async function (req, res) {
+router.get("/Alldishes", checkAuth, async function (req, res) {
    
     kafka.make_request("GetAllDish", req.params, function(err, results) {
         console.log("In result")

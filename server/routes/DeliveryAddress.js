@@ -6,8 +6,8 @@ const { stat } = require("fs");
 const Customer = require("../model/CustomerDetails")
 const kafka = require("../kafka/client")
 //mongo
-
-router.post("/deliveryAddress/customer", async function (req, res) {
+const { checkAuth } = require("../utils/passport");
+router.post("/deliveryAddress/customer", checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("DeliveryAddress", req.body, function(err, results) {
        console.log("In result")
@@ -66,7 +66,7 @@ router.post("/deliveryAddress/customer", async function (req, res) {
 
 
 //mongo
-router.get("/deliveryAddress/customer/:id", async function (req, res) {
+router.get("/deliveryAddress/customer/:id", checkAuth, async function (req, res) {
     //const CustomerId = req.params.id;
    kafka.make_request("GetDeliveryAddress", req.params, function(err, results) {
        console.log("In result")

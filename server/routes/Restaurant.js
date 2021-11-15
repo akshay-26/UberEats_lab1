@@ -4,7 +4,7 @@ const router = require("express").Router();
 const con = require("../connections/Dbconnection")
 const Restaurant = require("../model/RestaurantDetails")
 const kafka = require("../kafka/client")
-
+const { checkAuth } = require("../utils/passport");
 // router.get("/Restaurants", (req, res) => {
 
 //     const country = req.query.country;
@@ -30,7 +30,7 @@ const kafka = require("../kafka/client")
 //mongo
 
 
-router.get("/Restaurants", async (req, res) => {
+router.get("/Restaurants", checkAuth, async (req, res) => {
 
     const query = {};
     const country = req.query.country;
@@ -57,7 +57,7 @@ router.get("/Restaurants", async (req, res) => {
 // });
 
 // mongo
-router.get("/Restaurant", async function (req, res) {
+router.get("/Restaurant", checkAuth, async function (req, res) {
   const CustomerId = req.params.id;
  kafka.make_request("GetRestaurant", req.params, function(err, results) {
      console.log("In result")
@@ -77,7 +77,7 @@ router.get("/Restaurant", async function (req, res) {
  })
 });
 
-router.get("/Restaurant", async function(req,res){
+router.get("/Restaurant", checkAuth, async function(req,res){
     const restaurants = await Restaurant.find();
     res.status(200).send(restaurants);
 });
@@ -96,7 +96,7 @@ router.get("/Restaurant", async function(req,res){
 
 // mongo
 
-router.get("/dishes", async (req, res) =>{
+router.get("/dishes",  checkAuth, async (req, res) =>{
     const name = req.query.name;
     const id = req.params.id;
     const restaurants = await Restaurant.find({RestaurantId:id});

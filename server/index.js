@@ -37,14 +37,14 @@ app.use(
 );
 //app.use("/",imagestore)
 var corsOptions = {
-    origin: "http://13.58.35.249:3000"
+    origin: "http://localhost:3000"
   };
 
   mongoose
   .connect(
     "mongodb+srv://admin:admin@cluster0.hkqfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true,maxPoolSize: 100 }
   )
   .then((result) => {
     app.listen(3001, () => {

@@ -62,6 +62,7 @@ import PropTypes from 'prop-types';
 import  { tableCellClasses } from '@mui/material/TableCell';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
+import { useDispatch } from 'react-redux';
 
 
 const theme = createTheme();
@@ -128,6 +129,8 @@ function TablePaginationActions(props) {
 
 const RestaurantOrder = () => {
 
+  const dispatch = useDispatch();
+   
     const history = useHistory();
 
   if(!localStorage.getItem("RestaurantId")){
@@ -174,7 +177,7 @@ const RestaurantOrder = () => {
         console.log("rest Id", RestaurantId)
 
         const response = await axios.get(`${backendServer}/restaurant/Orders/${RestaurantId}`)
-
+        dispatch(RestaurantOrder(response.data))
         //console.log("restaurant orders",response.data['orders'].slice(1,2))
 
         setOrderResponse(response.data)

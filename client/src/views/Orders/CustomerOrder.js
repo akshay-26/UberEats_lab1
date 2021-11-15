@@ -51,6 +51,7 @@ import { useTheme } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
+import { useDispatch } from 'react-redux';
 
 
 const theme = createTheme();
@@ -117,7 +118,8 @@ TablePaginationActions.propTypes = {
 };
 
 const CustomerOrder = () => {
-
+  const dispatch = useDispatch();
+ 
   const history = useHistory();
 
   if (!localStorage.getItem("CustomerID")) {
@@ -216,6 +218,7 @@ const [OrderId, setOrderId] = useState('')
     const response = await axios.get(`${backendServer}/Orders/${CustomerId}`)
 
     console.log("orders", response.data)
+    dispatch(CustomerOrder(response.data))
     setOrderResponse(response.data)
     setValue(response.data)
     //const data1 = OrderResponse[0].DeliveryType; 

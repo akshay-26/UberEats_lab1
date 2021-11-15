@@ -22,7 +22,9 @@ import {  createMuiTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-
+import { useDispatch } from 'react-redux';
+import { Cart } from '../../actions';
+   
 const steps = ['Review your order', 'Delivery address', 'Place Order'];
 
 
@@ -30,6 +32,7 @@ const theme = createTheme();
 
 export default function CustomerCheckOut() {
 
+    const dispatch = useDispatch();
 
 
 if(!localStorage.getItem("CustomerID")){
@@ -80,6 +83,7 @@ if(!localStorage.getItem("CustomerID")){
         const username = localStorage.getItem("username");
         const userImage = localStorage.getItem("userImage")
         const curRestName = sessionStorage.getItem("CurrRestName")
+        dispatch(Cart(cart))
         let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
         axios.post(`${backendServer}/orders/customer`,
          { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name, CustomerName:username, RestaurantName: curRestName, ImageUrl:userImage})

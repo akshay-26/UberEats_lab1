@@ -19,7 +19,7 @@ const kafka = require("../kafka/client")
 //     // })
 //   })
 // })
-router.get("/UserProfile/User", async function (req, res) {
+router.get("/UserProfile/User", checkAuth, async function (req, res) {
   //const CustomerId = req.params.id;
  kafka.make_request("GetUser", req.query, function(err, results) {
      console.log("In result")
@@ -45,7 +45,7 @@ router.get("/UserProfile/User", async function (req, res) {
 //   const customer = await Customer.findOne({EmailId:email});
 //     res.status(200).send(customer);
 // })
-router.post("/UserProfile", async function (req, res) {
+router.post("/UserProfile", checkAuth,  async function (req, res) {
   //const CustomerId = req.params.id;
  kafka.make_request("PostUser", req.body, function(err, results) {
      console.log("In result")
@@ -190,7 +190,7 @@ router.post("/UserProfile", async function (req, res) {
 //     });
 // });
 
-router.get("/restaurant/:id", async function (req, res) {
+router.get("/restaurant/:id", checkAuth, async function (req, res) {
   //const CustomerId = req.params.id;
  kafka.make_request("GetRestaurantProfile", req.params, function(err, results) {
      console.log("In result")
@@ -217,7 +217,7 @@ router.get("/restaurant/:id", async function (req, res) {
 // })
 
 
-router.get("/customer/:id", async (req,res)=>{
+router.get("/customer/:id", checkAuth, async (req,res)=>{
     
     const CustomerId = req.params.id;
    // const restaurantId = msg.id;
@@ -266,7 +266,7 @@ router.get("/customer/:id", async (req,res)=>{
 //       }
 //   });
 // });
-router.post("/restaurant/profile", async function (req, res) {
+router.post("/restaurant/profile", checkAuth,  async function (req, res) {
   //const CustomerId = req.params.id;
  kafka.make_request("PostRestaurant", req.body, function(err, results) {
      console.log("In result")
