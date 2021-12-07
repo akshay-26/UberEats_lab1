@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 
 import AppBar from '@mui/material/AppBar';
@@ -25,7 +26,7 @@ import props from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
-
+import {GET_DISHES} from "../queries"
 const theme = createTheme();
 
 const styleimg = {
@@ -75,13 +76,17 @@ function RestaurantDashboard() {
   console.log("Hello filetered posts", filteredPosts);
 
   useEffect(async () => {
-    const restaurantId = localStorage.getItem('RestaurantId');
+    const RestaurantId = localStorage.getItem('RestaurantId');
     console.log("use effect");
-
-    const response = await axios.get(`${backendServer}/Restaurant/dishes/${restaurantId}`);
-
-    setCards(response.data);
-    console.log("Hello cards", response.data)
+    const query = GET_DISHES;
+    const response = await axios.post(`${backendServer}/getRestaurantDishes`, {
+      query, variables :{
+        RestaurantId
+      }
+    });
+    console.log("Hello cards", response.data.data)
+    setCards(response.data.data.getRestaurantDishes);
+   
 
     //  setRes1(response.data);
     setCardSearch(response.data);

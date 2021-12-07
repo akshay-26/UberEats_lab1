@@ -22,7 +22,7 @@ import {  createMuiTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-
+import {postOrder} from "../mutations"
 const steps = ['Review your order', 'Delivery address', 'Place Order'];
 
 
@@ -81,11 +81,29 @@ if(!localStorage.getItem("CustomerID")){
         const userImage = localStorage.getItem("userImage")
         const curRestName = sessionStorage.getItem("CurrRestName")
         let deliveryAddress = JSON.parse(sessionStorage.getItem("deliveryAddress"))
-        axios.post(`${backendServer}/orders/customer`,
-         { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name, CustomerName:username, RestaurantName: curRestName, ImageUrl:userImage})
+        const OrderInput = {
+            CustomerId:customerId,
+            CustomerName: username,
+            Image: userImage,
+            RestaurantId: restaurantId,
+            RestaurantName: curRestName,
+            DeliveryType: mode,
+            SpecialInstructions: name,
+            DeliveryAddress: deliveryAddress,
+            OrderDetails: cart
+        }
+
+        console.log("-----------------", OrderInput)
+        const query = postOrder;
+        axios.post(`${backendServer}/postOrder`,{
+            query, variables:{
+                Order: OrderInput
+            }
+        })
+        //  { DeliveryAddress: deliveryAddress, cart: cart, deliverytype: mode, restaurantId: restaurantId ,customerId: customerId, Instructions: name, CustomerName:username, RestaurantName: curRestName, ImageUrl:userImage})
             .then(response => {
-                console.log("post order", response.data)
-                setPostedOrder(response.data);
+                console.log("post order", response.data.data)
+                setPostedOrder(response.data.data.postOrder);
                 cleanUpTransaction();
             })
             .catch(error => {

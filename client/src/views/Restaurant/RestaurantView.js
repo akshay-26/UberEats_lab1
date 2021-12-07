@@ -1,3 +1,6 @@
+/* eslint-disable default-case */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
@@ -27,7 +30,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { useDispatch, useSelector } from 'react-redux';
-
+import {RESTAURANTS} from "../queries"
 const theme = createTheme();
 
 
@@ -57,12 +60,20 @@ const RestaurantView = () => {
   useEffect(async () => {
     const country = sessionStorage.getItem('country');
     const city = sessionStorage.getItem('city');
-    const url = `${backendServer}/Restaurant`;
-    const response = await axios.get(url);
-    console.log("Restaurant View", response)
-    setInitialLoad(response.data);
-    setCards(response.data);
-    console.log(cards);
+    const query = RESTAURANTS;
+    const url = `${backendServer}/getRestaurants`;
+
+    const response = await axios.post(url, {
+      query
+    }).then((response) =>{
+        console.log(response.data.data.getRestaurants)
+        console.log("Restaurant View", response)
+        setInitialLoad(response.data.data.getRestaurants);
+        setCards(response.data.data.getRestaurants);
+        console.log(cards);
+    });
+
+   
    // console.log("store is", store.getState());
 
   }, []);

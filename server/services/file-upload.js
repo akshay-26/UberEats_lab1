@@ -1,18 +1,19 @@
 var aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const config = require('../Config');
+const config = require("../Config")
 
-const bucketName = "uber-eats-images-cmpe273";
+const bucketName = "userprofileresume";
 const region = "us-east-2";
 
-//awsAccessKey = AKIAUGZXRMXL5MCDJVNG;
-//awsSecretKey = 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;
 
 awsAccessKey = config.awsAccessKey;
 awsSecretKey = config.awsSecretKey;
 
-config.awsSecretKey;
+// awsAccessKey = config.awsAccessKey;
+// awsSecretKey = config.awsSecretKey;
+
+console.log(config.awsAccessKey)
 
 const s3 = new aws.S3({
   region,

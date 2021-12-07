@@ -34,7 +34,7 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { MenuItem } from '@mui/material';
-
+import { ADD_DISH } from '../mutations';
 const theme = createTheme();
 
 
@@ -63,9 +63,9 @@ const dishcategory = [{
 const AddDish = () => {
 
     const history = useHistory();
-  if(!localStorage.getItem("RestaurantId")){
-    history.push("/RestaurantLogin")
-  }
+    if (!localStorage.getItem("RestaurantId")) {
+        history.push("/RestaurantLogin")
+    }
 
     const [image, setImage] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -77,7 +77,7 @@ const AddDish = () => {
 
     const [image1, getImage1] = useState('');
     const [imageUrl1, getImageUrl1] = useState('');
-     const [name1, setName1] = useState('');
+    const [name1, setName1] = useState('');
     const [desc1, getDesc1] = useState('');
     const [category1, getCategory1] = useState('');
     const [price1, getPrice1] = useState('');
@@ -99,25 +99,29 @@ const AddDish = () => {
         const restaurantId = localStorage.getItem('RestaurantId');
         //const dishid = localStorage.getItem('editDish');
         const dishId = sessionStorage.getItem('dishId');
-           
+        console.log(restaurantId)
 
         let payload = {
             DishId: dishId,
-            restaurantId: restaurantId,
-            dishdesc: data.get('desc'),
-            category: data.get('category'),
-            price: data.get('price'),
-            name: data.get('name'),
-            type: data.get('type'),
-            imageUrl: url || imageUrl
+            RestaurantId: restaurantId,
+            DishDesc: data.get('desc'),
+            DishCategory: data.get('category'),
+            Price: data.get('price'),
+            DishName: data.get('name'),
+            DishType: data.get('type'),
+            DishImage: "url || imageUrl"
         }
 
         console.log("dishes payload", payload)
-
-        axios.post(`${backendServer}/restaurant/Add/dishes`, payload)
+        const query = ADD_DISH;
+        axios.post(`${backendServer}/addOrEditDish`, {
+            query, variables: {
+                    ...payload
+            }
+        })
             .then(response => {
                 console.log(response)
-                
+
                 history.push("/RestaurantDashboard")
             })
             .catch(err => {
@@ -135,12 +139,12 @@ const AddDish = () => {
             console.log("Dishes response", response)
             const dish = response.data;
             setName(dish.DishName);
-             setDesc(dish.DishDesc);
-             setCategory(dish.DishCategory);
-             setType(dish.DishType);
-             setPrice(dish.Price);
-             setImageUrl(dish.DishImage);
-         }
+            setDesc(dish.DishDesc);
+            setCategory(dish.DishCategory);
+            setType(dish.DishType);
+            setPrice(dish.Price);
+            setImageUrl(dish.DishImage);
+        }
     }, [])
 
     const onPhotoChange = (event) => {
@@ -230,7 +234,7 @@ const AddDish = () => {
                                         />
     
                                     </Grid> */}
-                                    <Grid item xs={12}>
+                                <Grid item xs={12}>
                                     <TextField
                                         margin="none"
                                         required
@@ -240,7 +244,7 @@ const AddDish = () => {
                                         value={type}
                                         onChange={(e) => setType(e.target.value)}
                                         name="type"
-                                       // disabled={disabled}
+                                        // disabled={disabled}
                                         autoComplete="type"
                                         select
                                         autoFocus
@@ -265,7 +269,7 @@ const AddDish = () => {
                                         id="category"
                                         label="Category"
                                         name="category"
-                                      
+
                                         autoComplete="category"
                                         autoFocus
                                         select

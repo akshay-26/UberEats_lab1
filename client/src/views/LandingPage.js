@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import logged from '../actions';
 import jwt_decode from 'jwt-decode';
-
+import {LOGIN} from "./mutations"
 
 const LandingPage = () => {
   const history = useHistory();
@@ -25,25 +25,34 @@ const LandingPage = () => {
   const dispatch = useDispatch();
 
   const login = () => {
-    axios.post(`${backendServer}/LandingPage`,
-      { useremail: email, userpassword: password }
+    const EmailId = email;
+    const CustomerPassword = password;
+    const query = LOGIN;
+    axios.post(`${backendServer}/customerLogin`,{
+      query,
+      variables: {
+        EmailId,
+        CustomerPassword,
+      },
+    }
+  
     ).then((response) => {
-      setToken(response.data.token);
-      const tokenArray = response.data.token.split(' ');
-      localStorage.setItem('token', response.data.token);
-      console.log(response.data.token)
+    //  setToken(response.data.data.loginCustomer.token);
+    //  const tokenArray = response.data.token.split(' ');
+    //  localStorage.setItem('token', response.data.token);
+      console.log( response.data.data.customerLogin.CustomerId)
       // eslint-disable-next-line prefer-const
-      let decodedToken = jwt_decode(tokenArray[1]);
+    //  let decodedToken = jwt_decode(tokenArray[1]);
       // eslint-disable-next-line no-underscore-dangle
-      localStorage.setItem('CustomerID', decodedToken.CustomerId);
-      console.log("decodedToken", decodedToken);
-      localStorage.setItem('email', decodedToken.EmailId);
-     // localStorage.setItem('fullname', decodedToken.CustomerName);
+      localStorage.setItem('CustomerID', response.data.data.customerLogin.CustomerId);
+      // console.log("decodedToken", decodedToken);
+       localStorage.setItem('email', response.data.data.customerLogin.EmailId);
+     localStorage.setItem('fullname', response.data.data.customerLogin.CustomerName);
       //localStorage.setItem("CustomerID", response.data[0].CustomerId)
       console.log(response)
   
 
-      dispatch(logged(decodedToken.EmailId));
+     // dispatch(logged(decodedToken.EmailId));
       history.push('/RestaurantView')
     })
       .catch((error) => {

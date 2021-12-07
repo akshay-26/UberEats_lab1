@@ -1,54 +1,53 @@
+// import imagestore from  '../routes/imageStore.js'
+const mysql = require('mysql');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const uuid = require('uuid');
+const multer = require('multer');
+const passport = require('passport');
+const mongoose = require('mongoose');
+const LandingPage = require('./routes/LandingPage');
+const UserProfile = require('./routes/UserProfile');
+const RegisterUser = require('./routes/RegisterUser');
+const con = require('./connections/Dbconnection').connect;
+const imageStore = require('./routes/imageStore');
+const Restaurant = require('./routes/Restaurant');
+const Dishes = require('./routes/Dishes');
+const Favourites = require('./routes/Favourites');
+const Orders = require('./routes/Orders');
+const DeliveryAddress = require('./routes/DeliveryAddress');
 
+const kafka = require('./kafka/client');
+const { auth } = require('./utils/passport');
 
-//import imagestore from  '../routes/imageStore.js'
-const mysql = require("mysql");
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const uuid = require("uuid");
-const multer = require("multer");
-const  LandingPage  = require("./routes/LandingPage");
-const  UserProfile  = require("./routes/UserProfile");
-const  RegisterUser  = require("./routes/RegisterUser");
-const con = require("./connections/Dbconnection").connect
-const  imageStore  = require("./routes/imageStore");
-const Restaurant = require("./routes/Restaurant");
-const Dishes = require("./routes/Dishes")
-const Favourites = require("./routes/Favourites")
-const Orders = require("./routes/Orders")
-const DeliveryAddress = require("./routes/DeliveryAddress")
-const passport = require("passport")
-
-const mongoose = require("mongoose");
-var kafka = require('./kafka/client');
-var {auth} = require("./utils/passport")
 const app = express();
 auth();
-app.use(passport.initialize())
-app.use(express.json())
+app.use(passport.initialize());
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: true,
-    methods: ["GET", "POST"],
+    methods: ['GET', 'POST'],
     credentials: true,
-  })
+  }),
 );
-//app.use("/",imagestore)
-var corsOptions = {
-    origin: "http://13.58.35.249:3000"
-  };
+// app.use("/",imagestore)
+const corsOptions = {
+  origin: 'http://localhost:3000',
+};
 
-  mongoose
+mongoose
   .connect(
-    "mongodb+srv://admin:admin@cluster0.hkqfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    'mongodb+srv://admin:admin@cluster0.hkqfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+
+    { useNewUrlParser: true, useUnifiedTopology: true, maxPoolSize: 100 },
   )
   .then((result) => {
     app.listen(3001, () => {
-      console.log("DB and Server connected");
+      console.log('DB and Server connected');
     });
   });
 
@@ -57,17 +56,16 @@ var corsOptions = {
 //     console.log("connected");
 // })
 
-app.use("/uber-eats/api",LandingPage)
-app.use("/uber-eats/api", RegisterUser)
-app.use("/uber-eats/api",UserProfile)
-app.use("/uber-eats/api",imageStore)
-app.use("/uber-eats/api", Restaurant)
+app.use('/uber-eats/api', LandingPage);
+app.use('/uber-eats/api', RegisterUser);
+app.use('/uber-eats/api', UserProfile);
+app.use('/uber-eats/api', imageStore);
+app.use('/uber-eats/api', Restaurant);
 
-app.use("/uber-eats/api", Dishes)
-app.use("/uber-eats/api", Favourites)
-app.use("/uber-eats/api", Orders)
-app.use("/uber-eats/api", DeliveryAddress)
-
+app.use('/uber-eats/api', Dishes);
+app.use('/uber-eats/api', Favourites);
+app.use('/uber-eats/api', Orders);
+app.use('/uber-eats/api', DeliveryAddress);
 
 // app.get("/UserProfile", (req, res) => {
 

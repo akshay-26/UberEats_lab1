@@ -1,52 +1,52 @@
-const router = require("express").Router();
-const uuid = require("uuid");
-const con = require("../connections/Dbconnection")
-const bcrypt = require("bcrypt");
-const Customer = require("../model/CustomerDetails");
-const Restaurant = require("../model/RestaurantDetails");
+const router = require('express').Router();
+const uuid = require('uuid');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const con = require('../connections/Dbconnection');
+const Customer = require('../model/CustomerDetails');
+const Restaurant = require('../model/RestaurantDetails');
 
-const jwt = require("jsonwebtoken");
-const { auth } = require("../utils/passport");
-const secret = "hello";
+const { auth } = require('../utils/passport');
+
+const secret = 'hello';
 auth();
 
 const saltRounds = 10;
 
-router.post("/RegisterUser", async (req, res) => {
-    const hashPassword = await bcrypt.hash(req.body.userpassword, saltRounds);
-  
-    const customer = new Customer({
-      CustomerName: req.body.username,
-      EmailId: req.body.useremail,
-      CustomerPassword: hashPassword,
-    });
-  console.log("customer", customer)
-    try {
-      const emailExists = await Customer.findOne({ EmailId: req.body.useremail });
-      console.log("email", emailExists)
-      if (emailExists) {
-        return res.status(400).send(emailExists);
-      }
-      const savedUser = await customer.save();
-      if (savedUser) {
-        const payload = {
-          _id: customer._id,
-          CustomerName: customer.CustomerName,
-          EmailId: customer.EmailId,
-        };
-        console.log(payload);
-        const token = await jwt.sign(payload, secret, {
-          expiresIn: 1000000,
-        });
+router.post('/RegisterUser', async (req, res) => {
+  const hashPassword = await bcrypt.hash(req.body.userpassword, saltRounds);
+
+  const customer = new Customer({
+    CustomerName: req.body.username,
+    EmailId: req.body.useremail,
+    CustomerPassword: hashPassword,
+  });
+  console.log('customer', customer);
+  try {
+    const emailExists = await Customer.findOne({ EmailId: req.body.useremail });
+    console.log('email', emailExists);
+    if (emailExists) {
+      return res.status(400).send(emailExists);
+    }
+    const savedUser = await customer.save();
+    if (savedUser) {
+      const payload = {
+        _id: customer._id,
+        CustomerName: customer.CustomerName,
+        EmailId: customer.EmailId,
+      };
+      console.log(payload);
+      const token = await jwt.sign(payload, secret, {
+        expiresIn: 1000000,
+      });
         // console.log(token);
         // res.status(200).end(token);
-        res.status(200).json({ token: "jwt " + token });
-      }
-    } catch (err) {
-      res.status(400).send(err);
+      res.status(200).json({ token: `jwt ${token}` });
     }
-  });
-
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 // router.post("/RegisterUser", async (req, res) => {
 //     const username = req.body.username;
@@ -79,8 +79,7 @@ router.post("/RegisterUser", async (req, res) => {
 //     })
 // })
 
-
-router.post("/RegisterUser/Restaurant", async (req, res) => {
+router.post('/RegisterUser/Restaurant', async (req, res) => {
   const hashPassword = await bcrypt.hash(req.body.userpassword, saltRounds);
 
   const restaurant = new Restaurant({
@@ -88,10 +87,10 @@ router.post("/RegisterUser/Restaurant", async (req, res) => {
     RestaurantEmail: req.body.useremail,
     RestaurantPassword: hashPassword,
   });
-console.log("restaurant", restaurant)
+  console.log('restaurant', restaurant);
   try {
     const emailExists = await Restaurant.findOne({ RestaurantEmail: req.body.useremail });
-    console.log("email", emailExists)
+    console.log('email', emailExists);
     if (emailExists) {
       return res.status(400).send(emailExists);
     }
@@ -108,7 +107,7 @@ console.log("restaurant", restaurant)
       });
       // console.log(token);
       // res.status(200).end(token);
-      res.status(200).json({ token: "jwt " + token });
+      res.status(200).json({ token: `jwt ${token}` });
     }
   } catch (err) {
     res.status(400).send(err);
@@ -138,7 +137,6 @@ console.log("restaurant", restaurant)
 //             console.log("err", err)
 //             console.log("fields", fields)
 //             console.log("suharsh ")
-
 
 //             res.status(200).send({Restaurantid:Restaurantid});
 //         // }

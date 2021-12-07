@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import CameraIcon from '@mui/icons-material/PhotoCamera';
@@ -62,8 +64,8 @@ import PropTypes from 'prop-types';
 import  { tableCellClasses } from '@mui/material/TableCell';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
-
-
+import { RESTAURANT_ORDER } from '../queries';
+import{ ORDER_STATUS} from "../mutations"
 const theme = createTheme();
 function TablePaginationActions(props) {
     const theme = useTheme();
@@ -172,14 +174,18 @@ const RestaurantOrder = () => {
         const RestaurantId = localStorage.getItem("RestaurantId")
 
         console.log("rest Id", RestaurantId)
-
-        const response = await axios.get(`${backendServer}/restaurant/Orders/${RestaurantId}`)
+        const query = RESTAURANT_ORDER
+        const response = await axios.post(`${backendServer}/getRestaurantOrder`, {
+          query, variables:{
+            RestaurantId
+          }
+        })
 
         //console.log("restaurant orders",response.data['orders'].slice(1,2))
 
-        setOrderResponse(response.data)
-        setCustomerDet(response.data.customer)
-        setValue(response.data)
+        setOrderResponse(response.data.data.getRestaurantOrder)
+        setCustomerDet(response.data.data)
+        setValue(response.data.data.getRestaurantOrder)
         
         //const data1 = OrderResponse[0].DeliveryType; 
     }, [])
@@ -220,9 +226,16 @@ const RestaurantOrder = () => {
         const idx = OrderResponse.findIndex(item=>item.OrderId==OrderIdValue);
         console.log("idx value", idx)
         OrderResponse[idx].OrderStatus = age;
-        const response =   axios.post(`${backendServer}/restaurant/orders/${OrderIdValue}/${age}`
+        const query = ORDER_STATUS
+        const OrderId = OrderIdValue;
+        const OrderStatus = age;
+        const response = axios.post(`${backendServer}/updateOrderStatus`, {
+          query, variables:{
+            OrderId, OrderStatus
+          }
+        }
         ).then((response) =>{
-            console.log(response)
+            console.log(response.data.data)
         })
         .catch((err) =>{
             console.log(err)

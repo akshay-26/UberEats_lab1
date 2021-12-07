@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable default-case */
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
@@ -33,7 +35,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { TextField } from '@mui/material';
 import { MenuItem } from '@mui/material';
-
+import { RESTAURANT_DISHES } from '../queries';
 const theme = createTheme();
 
 export default function CustomerDashBoard() {
@@ -74,29 +76,37 @@ export default function CustomerDashBoard() {
   const CurrRestaurantDetails = JSON.parse(sessionStorage.getItem('currentRestaurantDetails'))
   console.log("sesson Value", CurrRestaurantDetails)
 
-  console.log({cart})
-  console.log({tempCart})
+  console.log({ cart })
+  console.log({ tempCart })
 
 
   useEffect(async () => {
     const restaurantId = sessionStorage.getItem('currentRestaurant');
     console.log("RestaurantId", restaurantId)
 
+    const query = RESTAURANT_DISHES;
+    const RestaurantId = restaurantId;
+    const url = `${backendServer}/getDishes`;
+    const response = await axios.post(url,
+      {
+        query,
+        variables: {
+          RestaurantId
+        },
+      }).then((response) => {
+        console.log(response.data.data.getDishes)
+
+        setCards(response.data.data.getDishes);
+        setInitialLoad(response.data.data.getDishes);
+        setDefaultImg(response.data.data.getDishes.DishImage)
 
 
-    const url = `${backendServer}/Restaurant/dishes/${restaurantId}`;
-    const response = await axios.get(url);
-    console.log(response)
-    //getGroups(response.data);
-    setCards(response.data);
-    setInitialLoad(response.data);
-    setDefaultImg(response.data[0].DishImage)
-    //setselectGroups(array);
+      })
+
+    // console.log("store is", store.getState());
     let currentCart = JSON.parse(sessionStorage.getItem('currentCart')) || [];
     setCart(currentCart);
     console.log(cart);
-    // console.log("store is", store.getState());
-
   }, []);
 
   const persistCartOnSession = (cart) => {
@@ -183,25 +193,26 @@ export default function CustomerDashBoard() {
     setCards(cfilter);
   }
 
-  const vieworders = () =>{
+  const vieworders = () => {
     history.push("/CustomerOrder")
   }
-  const styles = 
+  const styles =
   {
-  
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9,
-    marginTop:'30',
-   
+
+    media: {
+      height: 0,
+      paddingTop: '56.25%', // 16:9,
+      marginTop: '30',
+
       display: 'block',
       margin: 'auto',
-     // height: '50',
-      width: '25'}
-    
-  // }
- 
-    };
+      // height: '50',
+      width: '25'
+    }
+
+    // }
+
+  };
   return (
     <>
       <NavbarCustomer onSearch={onSearch} view='customerrestaurant' />
@@ -230,21 +241,21 @@ export default function CustomerDashBoard() {
                 Scroll Through Your Favourite Restaurant
               </Typography> */}
               <Card
-                    sx={{ height: '70%', width:'100%' , display: 'flex', flexDirection: 'row' }}
-                  >
-                    <CardMedia
-                      component="img"
-                      sx={{
-                        // 16:9
-                        pt: '00.25%',
-                      }}
-                      image={defaultimage}
-                      alt="random"
-                      style={styles}
-                    />
-                    {/* <h3>"rest"</h3> */}
-                    </Card>
-                    <br></br>
+                sx={{ height: '70%', width: '100%', display: 'flex', flexDirection: 'row' }}
+              >
+                <CardMedia
+                  component="img"
+                  sx={{
+                    // 16:9
+                    pt: '00.25%',
+                  }}
+                  image={defaultimage}
+                  alt="random"
+                  style={styles}
+                />
+                {/* <h3>"rest"</h3> */}
+              </Card>
+              <br></br>
               <Box textAlign='center'>
                 <Button variant='contained' onClick={vieworders}>
                   View Orders
@@ -300,7 +311,7 @@ export default function CustomerDashBoard() {
                         pt: '00.25%',
                       }}
                       image={card.DishImage}
-                      style= {styles}
+                      style={styles}
                       alt="random"
                     />
                     <CardContent sx={{ flexGrow: 1 }}>

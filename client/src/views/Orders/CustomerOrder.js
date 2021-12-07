@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import CameraIcon from '@mui/icons-material/PhotoCamera';
@@ -51,6 +52,7 @@ import { useTheme } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
+import { CUSTOMER_ORDER } from '../queries';
 
 
 const theme = createTheme();
@@ -212,12 +214,18 @@ const [OrderId, setOrderId] = useState('')
     console.log("in customer order")
 
     const CustomerId = localStorage.getItem("CustomerID")
+    const query = CUSTOMER_ORDER;
+    const response = await axios.post(`${backendServer}/getCustomerOrder`, {
+      query,
+        variables: {
+          CustomerId
+        
+      }
+    })
 
-    const response = await axios.get(`${backendServer}/Orders/${CustomerId}`)
-
-    console.log("orders", response.data)
-    setOrderResponse(response.data)
-    setValue(response.data)
+    console.log("orders", response.data.data.getCustomerOrder)
+    setOrderResponse(response.data.data.getCustomerOrder)
+    setValue(response.data.data.getCustomerOrder)
     //const data1 = OrderResponse[0].DeliveryType; 
     // console.log(OrderResponse[0].DeliveryType)
   }, [])

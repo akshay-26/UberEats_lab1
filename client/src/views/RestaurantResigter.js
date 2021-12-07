@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { signed } from '../actions';
 import { Row, Col, Alert } from 'react-bootstrap';
 import jwt_decode from 'jwt-decode';
-
+import { RESTAURANT_REGISTER } from './mutations';
 
 const RestaurantRegister = () => {
     const history = useHistory();
@@ -25,20 +25,25 @@ const RestaurantRegister = () => {
 
 
     const Register = () => {
-        axios.post(`${backendServer}/RegisterUser/Restaurant`,
-            { RestaurantName: RestaurantName, useremail: email, userpassword: password }
+        const query = RESTAURANT_REGISTER
+        const RestaurantEmail = email;
+        const RestaurantPassword = password
+        axios.post(`${backendServer}/restaurantRegister`,
+           {query, variables:{
+                RestaurantName, RestaurantEmail, RestaurantPassword
+           }} 
         ).then((response) => {
             console.log("Restaurant Resgister", response)
-            const tokenArray = response.data.token.split(' ');
-            localStorage.setItem('Restauranttoken', response.data.token);
+           // const tokenArray = response.data.token.split(' ');
+         //   localStorage.setItem('Restauranttoken', response.data.data.restaurantRegistertoken);
             // eslint-disable-next-line prefer-const
-            let decodedToken = jwt_decode(tokenArray[1]);
-            console.log("decodedToken", decodedToken)
+          //  let decodedToken = jwt_decode(tokenArray[1]);
+           // console.log("decodedToken", decodedToken)
             // eslint-disable-next-line no-underscore-dangle
-            localStorage.setItem('RestaurantId', decodedToken._id);
+            localStorage.setItem('RestaurantId',response.data.data.restaurantRegister.RestaurantId);
             //console.log(token);
-            localStorage.setItem('RestaurantEmail', decodedToken.RestaurantEmail);
-            localStorage.setItem('RestaurantName', decodedToken.RestaurantName);
+            localStorage.setItem('RestaurantEmail', response.data.data.restaurantRegister.RestaurantEmail);
+            localStorage.setItem('RestaurantName', response.data.data.restaurantRegister.RestaurantName);
             dispatch(signed(RestaurantName, email));
            // localStorage.setItem("RestaurantId",  response.data.Restaurantid)
             history.push('/RestaurantDashboard')

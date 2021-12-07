@@ -10,7 +10,8 @@ import logo from '../../images/UberEATS.png'
 import backendServer from '../../Config'
 import { MenuItem } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import {userData} from '../../actions';
+import { userData } from '../../actions';
+import { CUSTOMER_PROFILE } from "../queries"
 // const val = localStorage.getItem("currentUser")
 
 //console.log(val)
@@ -71,38 +72,35 @@ const UserProfile = () => {
     let newErrors = {}
     // name errors
 
-    if (!phonenumber || phonenumber === '') 
-    {
+    if (!phonenumber || phonenumber === '') {
       newErrors["phonenumber"] = 'cannot be blank!'
       isValid = false;
     }
     if (typeof phonenumber !== "undefined") {
-          
+
       var pattern = new RegExp(/^[0-9\b]+$/);
       if (!pattern.test(phonenumber)) {
         isValid = false;
         newErrors["phonenumber"] = "Please enter only number.";
-      }else if(phonenumber.length != 10){
+      } else if (phonenumber.length != 10) {
         isValid = false;
         newErrors["phonenumber"] = "Please enter valid phone number.";
       }
     }
 
-    if(!zipcode || zipcode === '')
-    {
+    if (!zipcode || zipcode === '') {
       newErrors["Zip"] = "Zip Code cannot be blank"
       isValid = false;
     }
-    if(zipcode.length != 5)
-    {
+    if (zipcode.length != 5) {
       newErrors["Zip"] = "Zip Code should be 5 digits"
       isValid = false;
 
     }
-    
+
     // food errors
 
-   // isValid = true;
+    // isValid = true;
 
     // Conditional logic:
     if (Object.keys(newErrors).length > 0) {
@@ -111,8 +109,8 @@ const UserProfile = () => {
       setErrors(newErrors)
     }
     return isValid
-  
-}
+
+  }
   // const [emailUpdate, setEmail] = useState('');
   // const [fullnameUpdate, setFullname] = useState('');
   // const [phonenumberUpdate, setPhonenumber] = useState('');
@@ -146,85 +144,93 @@ const UserProfile = () => {
     //         "content-type": "multipart/form-data"
     //     }
     // };
-   
-    if(findFormErrors()){
+
+    if (findFormErrors()) {
 
       console.log("phonenumber", phonenumber)
-    if (image) {
-      let imageData = new FormData()
-      imageData.append('image', image)
-      var url1;
-      let url = `${backendServer}/image/user`
+      if (image) {
+        let imageData = new FormData()
+        imageData.append('image', image)
+        var url1;
+        let url = `${backendServer}/image/user`
 
-      const response = await axios.post(url, imageData);
-      console.log("imageResponse 123", response.data.imageUrl)
-      url1 = response.data.imageUrl
-      console.log("URL", url1)
-      setImageUrl(url1);
-    }
-
-   
-    const userimage = localStorage.setItem("userImage", url1);
-
-    var CustomerId =  localStorage.getItem("CustomerID")
-    console.log("country", imageUrl)
-    let payload = {
-      CustomerId,
-      email,
-      fullname,
-      nickname,
-      phonenumber,
-      city,
-      state,
-      zipcode,
-      url1,
-      country,
-      state,
-      zipcode
-    }
-    console.log("payload 123", payload)
-    console.log("errors", errors.phonenumber)
-
-    // const response = await
-    const tokenValue = localStorage.getItem('token');
-    //axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    axios.post(`${backendServer}/UserProfile`, payload ,{
-      headers: {
-          'authorization': tokenValue,
-          'Accept' : 'application/json',
-          'Content-Type': 'application/json'
+        const response = await axios.post(url, imageData);
+        console.log("imageResponse 123", response.data.imageUrl)
+        url1 = response.data.imageUrl
+        console.log("URL", url1)
+        setImageUrl(url1);
       }
-  })
-      .then((response) => {
-        console.log(response);
-        setFile("");
-        //window.location.reload(false);
-        history.push("/RestaurantView")
-      });
+
+
+      const userimage = localStorage.setItem("userImage", url1);
+
+      var CustomerId = localStorage.getItem("CustomerID")
+      console.log("country", imageUrl)
+      let payload = {
+        CustomerId,
+        email,
+        fullname,
+        nickname,
+        phonenumber,
+        city,
+        state,
+        zipcode,
+        url1,
+        country,
+        state,
+        zipcode
+      }
+      console.log("payload 123", payload)
+      console.log("errors", errors.phonenumber)
+
+      // const response = await
+      const tokenValue = localStorage.getItem('token');
+      //axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+      axios.post(`${backendServer}/UserProfile`, payload, {
+        headers: {
+          'authorization': tokenValue,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => {
+          console.log(response);
+          setFile("");
+          //window.location.reload(false);
+          history.push("/RestaurantView")
+        });
+    }
   }
-}
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
 
     const val = sessionStorage.getItem("currentUser");
+    const EmailId = val;
     console.log(val)
+    const query = CUSTOMER_PROFILE;
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    const response = await axios.get(`${backendServer}/UserProfile/User`, { params: { email: val } });
-    dispatch(userData(response.data))
-    console.log("user profile", response.data.EmailId)
-    const username = localStorage.setItem("username", response.data.CustomerName);
+    const response = await axios.post(`${backendServer}/getUserProfile`, {
+      query, 
+      variables: {
+        EmailId
+      }
+    });
+    dispatch(userData(response.data.data.getUserProfile))
+    console.log("user profile", response.data.data.getUserProfile)
+    const username = localStorage.setItem("username", response.data.data.getUserProfile.CustomerName);
     if (val) {
-      setEmail(response.data.EmailId);
-      setFullname(response.data.CustomerName);
-      setNickname(response.data.NickName)
-      setPhonenumber(response.data.PhoneNumber)
-      setImageUrl(response.data.Image);
-      setCity(response.data.City)
-      setCountry(response.data.Country)
-      setState(response.data.State)
-      setZipcode(response.data.ZipCode)
+      setEmail(response.data.data.getUserProfile.EmailId);
+      setFullname(response.data.data.getUserProfile.CustomerName);
+      setNickname(response.data.data.getUserProfile.NickName)
+      setPhonenumber(response.data.data.getUserProfile.PhoneNumber)
+      setImageUrl(response.data.data.getUserProfile.Image);
+      setCity(response.data.data.getUserProfile.City)
+      setCountry(response.data.data.getUserProfile.Country)
+      setState(response.data.data.getUserProfile.State)
+      setZipcode(response.data.data.getUserProfile.ZipCode)
     }
     // console.log(dbemail);
 
@@ -285,12 +291,12 @@ const dispatch = useDispatch();
                       />
                     </div>
                     <br></br>
-                    <h6 class="user-name" style={{ color: 'blue' }}>Welcome {nickname}</h6>
+                    <h6 class="user-name" text-transform= 'uppercase' style={{ color: '#003366' }}>Welcome {nickname.toUpperCase()}</h6>
                     {/* <h6 class="user-email"> {email}</h6> */}
                   </div>
                   <div class="about">
 
-                    <h5 style={{ color: 'blue' }}>Your Favourite Restaurant's</h5>
+                    <h5 style={{ color: '#003366' }}>Your Favourite Restaurant's</h5>
                     {restaurant.map((card) => (
 
                       <p>{card.RestaurantName}</p>

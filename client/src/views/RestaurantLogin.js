@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import  logged  from '../actions';
 import { Row, Col, Alert } from 'react-bootstrap';
 import jwt_decode from 'jwt-decode';
-  
+import {RESTAURANTLOGIN} from "./mutations"
 
 const RestaurantLogin = () => {
   const history = useHistory();
@@ -25,20 +25,28 @@ const RestaurantLogin = () => {
 
 
   const login = () => {
-    axios.post(`${backendServer}/RestaurantUser`,
-      { useremail: email, userpassword: password }
+    const EmailId  = email;
+    const RestaurantPassword = password;
+    const query = RESTAURANTLOGIN;
+    axios.post(`${backendServer}/restaurantLogin`,
+    {
+      query,
+      variables: {
+        EmailId,
+        RestaurantPassword,
+      },
+    }
     ).then((response) => {
-      setToken(response.data.token);
-      const tokenArray = response.data.token.split(' ');
-      localStorage.setItem('Restauranttoken', response.data.token);
-      console.log(response.data.token)
+    
+     // localStorage.setItem('Restauranttoken', response.data.data.restaurantLogin.RestaurantId);
+      //console.log(response.data.token)
       // eslint-disable-next-line prefer-const
-      let decodedToken = jwt_decode(tokenArray[1]);
+    
       // eslint-disable-next-line no-underscore-dangle
-      localStorage.setItem('RestaurantId', decodedToken.RestaurantId);
-      console.log("decodedToken", decodedToken);
-      localStorage.setItem('RestaurantEmail', decodedToken.RestaurantEmail);
-      dispatch(logged(decodedToken.RestaurantEmail,  decodedToken.RestaurantId ));
+      localStorage.setItem('RestaurantId',response.data.data.restaurantLogin.RestaurantId);
+      console.log("decodedToken", response.data.data.restaurantLogin.RestaurantId);
+      localStorage.setItem('RestaurantEmail',response.data.data.restaurantLogin.RestaurantEmail);
+    //  dispatch(logged(decodedToken.RestaurantEmail,  decodedToken.RestaurantId ));
       history.push('/RestaurantDashboard')
     })
       .catch((err) => {

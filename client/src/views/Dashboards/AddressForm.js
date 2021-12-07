@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable eqeqeq */
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -9,15 +11,15 @@ import { useState, useHistory } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
 import backendServer from '../../Config';
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
-
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { GET_DELIVERY_ADDRESS} from "../queries"
 export default function AddressForm(props) {
 
-//     const history = useHistory();
+    //     const history = useHistory();
 
-// if(!localStorage.getItem("CustomerID")){
-//   history.push("/LandingPage")
-// }
+    // if(!localStorage.getItem("CustomerID")){
+    //   history.push("/LandingPage")
+    // }
     const [addr1, setAddr1] = useState('');
     const [addr2, setAddr2] = useState('');
     const [city, setCity] = useState('');
@@ -26,7 +28,7 @@ export default function AddressForm(props) {
     const [pincode, setPincode] = useState('');
     const [addressName, setAddressName] = useState('');
     const [checked, setChecked] = useState(false);
-    const [selectedAddress,setSelectedAddress] = useState('');
+    const [selectedAddress, setSelectedAddress] = useState('');
     const [address, setAddress] = useState([{
         "AddressId": "",
         "AddressLine1": "",
@@ -38,12 +40,12 @@ export default function AddressForm(props) {
         "CustomerId": "",
         "Save": false,
         "SavaAsName": "None",
-        "SelectedAddress":""
+        "SelectedAddress": ""
     }]);
     const [newAddressSelection, setAddressSelection] = useState(false);
 
     const onAddressSelect = (event) => {
-        let addr = address.filter(addr=>addr.AddressName === event.target.value)[0];
+        let addr = address.filter(addr => addr.AddressName === event.target.value)[0];
         setAddr1(addr.AddressLine1);
         setAddr2(addr.AddressLine2);
         setCity(addr.City);
@@ -51,29 +53,36 @@ export default function AddressForm(props) {
         setState(addr.State);
         setPincode(addr.Pincode);
         setSelectedAddress(event.target.value);
-        sessionStorage.setItem('deliveryAddress',JSON.stringify({...addr,...{selectedAddress:event.target.value}}));
+        sessionStorage.setItem('deliveryAddress', JSON.stringify({ ...addr, ...{ selectedAddress: event.target.value } }));
         props.onAddressSelect(addr);
-        if(event.target.value != "None"){
+        if (event.target.value != "None") {
             setAddressName(addr.AddressName);
             setSelectedAddress(addr.AddressName);
             setAddressSelection(true);
-        }else{
+        } else {
             setAddressSelection(false);
             setAddressName("");
-        } 
+        }
         props.onAddressChange(event);
     }
     useEffect(async () => {
-        let customerId = localStorage.getItem('CustomerID');
-        let savedAddress = await axios.get(`${backendServer}/deliveryAddress/customer/${customerId}`);
+        let CustomerId = localStorage.getItem('CustomerID');
+        const query = GET_DELIVERY_ADDRESS
+        let savedAddress = await axios.post(`${backendServer}/getDeliveryAddress`,
+            {
+                query,
+                variables: {
+                    CustomerId
+                },
+            });
         console.log(savedAddress)
-        if (savedAddress.data.length != 0){
-            let newAddr = [...address,...savedAddress.data];
+        if (savedAddress.data.data.getDeliveryAddress.length != 0) {
+            let newAddr = [...address, ...savedAddress.data.data.getDeliverAddress];
             console.log("newAddr", newAddr)
             setAddress(newAddr);
         }
         let addr = JSON.parse(sessionStorage.getItem('deliveryAddress'))
-        if(addr){
+        if (addr) {
             setAddr1(addr.AddressLine1);
             setAddr2(addr.AddressLine2);
             setCity(addr.City);
@@ -83,10 +92,10 @@ export default function AddressForm(props) {
             setAddressName(addr.AddressName);
             setChecked(addr.Save);
             //setSelectedAddress(addr.SavaAsName);
-            if(("Save" in addr)==false){
+            if (("Save" in addr) == false) {
                 setAddressSelection(true);
             }
-            if(addr.SavaAsName == "None"){
+            if (addr.SavaAsName == "None") {
                 setAddressSelection(false);
                 setAddressName("");
             }

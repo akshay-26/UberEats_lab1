@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
@@ -9,7 +10,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import backendServer from '../../Config';
 import TextField from '@mui/material/TextField';
-
+import { RECEIPT_ORDER } from '../queries';
 export default function Receipt(props) {
 
     const [cart, setCart] = useState([]);
@@ -32,10 +33,16 @@ export default function Receipt(props) {
     useEffect(async () => {
         setOrder(props.order.DeliveryAddress[0]);
         console.log("order Res", props.order.DeliveryAddress[0])
-        const response = await axios.get(`${backendServer}/orders/${props.order.OrderId}/items`)
-        console.log("hello", response.data)
-        setOrderDetails(response.data.OrderDetails);
-        setAddressDetails(response.data);
+        const OrderId = props.order.OrderId
+        const query = RECEIPT_ORDER;
+        const response = await axios.post(`${backendServer}/getReceipt`, {
+            query, variables:{
+                OrderId
+            }
+        })
+        console.log("hello", response.data.data)
+        setOrderDetails(response.data.data.getReceipt);
+        setAddressDetails(response.data.data.getReceipt);
         console.log("wassup", addressdetails.Instructions)
 
     }, []);

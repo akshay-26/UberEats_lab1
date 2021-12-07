@@ -1,9 +1,8 @@
-const awsAccessKey = "AKIAUGZXRMXLVDILPDMP";
-const awsSecretKey = "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";
+const awsAccessKey = "AKIAWM3WYIWI5SYZTE66";
+const awsSecretKey = "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";
 
 
-// export AWS_ACCESS_KEY_ID="AKIAUGZXRMXLVDILPDMP"
-// export AWS_SECRET_ACCESS_KEY="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"
+
 
 const config = {
     secret: "cmpe273_secret_key",
